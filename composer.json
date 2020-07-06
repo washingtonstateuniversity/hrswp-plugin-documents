@@ -1,0 +1,29 @@
+{
+	"name": "washingtonstateuniversity/hrswp-plugin-documents",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"description": "A WSU HRS WordPress plugin to provide document management and listing.",
+	"homepage": "https://github.com/washingtonstateuniversity/hrswp-plugin-blocks/blob/stable/README.md",
+	"keywords":[ "wordpress", "plugin", "documents", "blocks" ],
+	"support": {
+		"issues": "https://github.com/washingtonstateuniversity/hrswp-plugin-blocks/issues"
+	},
+	"authors": [
+		{
+			"name": "Adam Turner"
+		}
+	],
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+		"squizlabs/php_codesniffer": "^3.5.5",
+		"phpcompatibility/php-compatibility": "^9.2.0",
+		"wp-coding-standards/wpcs": "^2.3.0",
+		"sirbrillig/phpcs-variable-analysis": "^2.8.2",
+		"roave/security-advisories": "dev-master"
+	},
+	"scripts": {
+		"format": "phpcbf --standard=phpcs.xml.dist --report-summary --report-source",
+		"lint-summary": "phpcs --standard=phpcs.xml.dist --colors --report-summary --report-source",
+		"lint-detail": "phpcs --standard=phpcs.xml.dist --colors"
+	}
+}
