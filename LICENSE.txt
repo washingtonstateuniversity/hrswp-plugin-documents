@@ -1,6 +1,6 @@
 HRSWP Plugin Documents
 
-Copyright 2019 by Washington State University
+Copyright 2020 by Washington State University
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
