@@ -1,0 +1,7 @@
+{
+    "extends": "stylelint-config-wordpress",
+	"rules": {
+		"comment-empty-line-before": null,
+		"no-descending-specificity": null
+	}
+}
