@@ -20,10 +20,11 @@ Changelog formatting (http://semver.org/)
 ### Project Management
 -->
 
-## 1.0.0 (2020-07-06)
+## 1.0.0-rc.2 (2020-07-14)
 
 ### Features
 
+- Create the HRSWP Documents (`hrswp_documents`) custom post type with post meta to track the selected file and template redirect method to serve the file in place of the default template. (b3e8d4f)
 - ✨ Add plugin load and lifecycle management functions. (09c9df5)
 
 ### Documentation
