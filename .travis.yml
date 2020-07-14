@@ -22,7 +22,7 @@ cache:
 branches:
   only:
     - stable
-    - 0.x
+    - /^stage\/.*/
 
 before_install:
   - npm --version

@@ -20,10 +20,12 @@ Changelog formatting (http://semver.org/)
 ### Project Management
 -->
 
-## 1.0.0 (2020-07-06)
+## 1.0.0-rc.2 (2020-07-14)
 
 ### Features
 
+- ✨ Create the Document Select block with block build pipeline and script includes. (e3c9dc8)
+- Create the HRSWP Documents (`hrswp_documents`) custom post type with post meta to track the selected file and template redirect method to serve the file in place of the default template. (b3e8d4f)
 - ✨ Add plugin load and lifecycle management functions. (09c9df5)
 
 ### Documentation
@@ -32,10 +34,13 @@ Changelog formatting (http://semver.org/)
 
 ### Build Tooling
 
+- 👷 Set Travis to track any `stage/*` branch.
+- Add the Classnames npm dev-dependency. (e3c9dc8)
 - Add `eslint-plugin-jest` npm dev-dependency. (3b720d0)
 - Add build tool configuration and script files. (9a330e8)
 - 👷 Add Travis CI configuration. (2e71a28)
 
 ### Project Management
 
+- ✅ Add Github issue and pull request templates. (3e5f2a9)
 - Add Git configuration files.
