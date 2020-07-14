@@ -72,6 +72,8 @@ class Documents_Post_Type {
 			),
 			'rewrite'         => array( 'slug' => admin\get_plugin_info( 'slug' ) ),
 			'show_in_rest'    => true,
+			'template'        => array( array( 'hrswp/document-select' ) ),
+			'template_lock'   => 'all',
 		);
 
 		register_post_type( admin\get_plugin_info( 'post_type' ), $documents_args );

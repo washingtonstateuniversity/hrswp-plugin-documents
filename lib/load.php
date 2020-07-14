@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Silence is golden.' );
 }
 
+require dirname( __FILE__ ) . '/client-assets.php';
 require dirname( __FILE__ ) . '/data.php';
 
 require dirname( __DIR__ ) . '/inc/class-documents-post-type.php';
