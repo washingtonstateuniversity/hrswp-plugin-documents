@@ -101,6 +101,9 @@ function get_plugin_info( $type = '' ) {
 		case 'plugin_file_uri':
 			$output = __FILE__;
 			break;
+		case 'post_type':
+			$output = 'hrswp_documents';
+			break;
 		case 'slug':
 			$output = 'documents';
 			break;
