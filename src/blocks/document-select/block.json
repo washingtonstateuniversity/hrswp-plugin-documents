@@ -1,0 +1,9 @@
+{
+	"name": "hrswp/document-select",
+	"category": "media",
+	"supports": {
+		"inserter": false,
+		"reusable": false,
+		"html": false
+	}
+}
