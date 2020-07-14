@@ -34,7 +34,6 @@ Changelog formatting (http://semver.org/)
 
 ### Build Tooling
 
-- ✅ Add Github issue and pull request templates. (3e5f2a9)
 - 👷 Set Travis to track any `stage/*` branch.
 - Add the Classnames npm dev-dependency. (e3c9dc8)
 - Add `eslint-plugin-jest` npm dev-dependency. (3b720d0)
@@ -43,4 +42,5 @@ Changelog formatting (http://semver.org/)
 
 ### Project Management
 
+- ✅ Add Github issue and pull request templates. (3e5f2a9)
 - Add Git configuration files.
