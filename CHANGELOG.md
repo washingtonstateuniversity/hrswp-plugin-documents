@@ -24,6 +24,7 @@ Changelog formatting (http://semver.org/)
 
 ### Features
 
+- ✨ Create the Document Select block with block build pipeline and script includes. (e3c9dc8)
 - Create the HRSWP Documents (`hrswp_documents`) custom post type with post meta to track the selected file and template redirect method to serve the file in place of the default template. (b3e8d4f)
 - ✨ Add plugin load and lifecycle management functions. (09c9df5)
 
@@ -33,6 +34,9 @@ Changelog formatting (http://semver.org/)
 
 ### Build Tooling
 
+- ✅ Add Github issue and pull request templates. (3e5f2a9)
+- 👷 Set Travis to track any `stage/*` branch.
+- Add the Classnames npm dev-dependency. (e3c9dc8)
 - Add `eslint-plugin-jest` npm dev-dependency. (3b720d0)
 - Add build tool configuration and script files. (9a330e8)
 - 👷 Add Travis CI configuration. (2e71a28)
