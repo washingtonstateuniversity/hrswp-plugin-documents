@@ -7,8 +7,8 @@
  * Author URI: https://hrs.wsu.edu/
  * Plugin URI: https://github.com/washingtonstateuniversity/hrswp-plugin-documents
  * Text Domain: hrswp-documents
- * Requires at least: 5.0
- * Tested up to: 5.4.3
+ * Requires at least: 5.5
+ * Tested up to: 5.5
  * Requires PHP: 7.0
  *
  * @package HRSWP_Documents
@@ -41,7 +41,7 @@ if ( false !== verify_dependencies() ) {
 function wordpress_version_notice() {
 	printf(
 		'<div class="error"><p>%s</p></div>',
-		esc_html__( 'The HRSWP Documents plugin requires WordPress 5.0.0 or later to function properly. Please upgrade WordPress before activating.', 'hrswp-documents' )
+		esc_html__( 'The HRSWP Documents plugin requires WordPress 5.5.0 or later to function properly. Please upgrade WordPress before activating.', 'hrswp-documents' )
 	);
 }
 
@@ -63,7 +63,7 @@ function verify_dependencies() {
 		? str_replace( '-src', '', $wp_version )
 		: preg_replace( '/-[A-Za-z-0-9]*$/', '.0', $wp_version );
 
-	if ( version_compare( $version, '5.0.0', '<' ) ) {
+	if ( version_compare( $version, '5.5.0', '<' ) ) {
 		return false;
 	}
 
