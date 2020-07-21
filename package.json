@@ -38,7 +38,7 @@
 		"cssnano": "^4.1.10",
 		"eslint": "^7.3.1",
 		"eslint-plugin-jest": "^23.18.0",
-		"lodash": "^4.17.15",
+		"lodash": "^4.17.19",
 		"npm-package-json-lint": "^5.1.0",
 		"npm-run-all": "^4.1.5",
 		"postcss-cli": "^7.1.1",
