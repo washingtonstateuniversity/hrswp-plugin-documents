@@ -34,6 +34,9 @@ class Documents_Post_Type {
 	 * @return void
 	 */
 	public function action_register_post_types() {
+		// Make sure the HRS Unit taxonomy exists before using it.
+		$hrs_unit_tax = taxonomy_exists( 'hrs_unit' ) ? 'hrs_unit' : '';
+
 		$documents_labels = array(
 			'name'                  => esc_html_x( 'Document Manager', 'post type general name', 'hrswp-documents' ),
 			'singular_name'         => esc_html_x( 'Document', 'post type singular name', 'hrswp-documents' ),
@@ -70,10 +73,11 @@ class Documents_Post_Type {
 				'custom-fields',
 				'thumbnail',
 			),
-			'rewrite'           => array( 'slug' => admin\get_plugin_info( 'slug' ) ),
-			'show_in_rest'      => true,
-			'template'          => array( array( 'hrswp/document-select' ) ),
-			'template_lock'     => 'all',
+			'taxonomies'      => array( 'category', 'post_tag', $hrs_unit_tax ),
+			'rewrite'         => array( 'slug' => admin\get_plugin_info( 'slug' ) ),
+			'show_in_rest'    => true,
+			'template'        => array( array( 'hrswp/document-select' ) ),
+			'template_lock'   => 'all',
 		);
 
 		register_post_type( admin\get_plugin_info( 'post_type' ), $documents_args );
