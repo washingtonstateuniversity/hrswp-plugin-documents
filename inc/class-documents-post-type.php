@@ -58,18 +58,18 @@ class Documents_Post_Type {
 		);
 
 		$documents_args = array(
-			'labels'          => $documents_labels,
-			'public'          => true,
-			'capability_type' => 'post',
-			'hierarchical'    => false,
-			'show_in_menu'    => 'upload.php',
-			'menu_icon'       => 'dashicons-media-document',
-			'supports'        => array(
+			'labels'            => $documents_labels,
+			'public'            => true,
+			'capability_type'   => 'post',
+			'hierarchical'      => false,
+			'show_in_menu'      => 'upload.php',
+			'show_in_nav_menus' => false,
+			'menu_icon'         => 'dashicons-media-document',
+			'supports'          => array(
 				'title',
 				'editor',
 				'author',
 				'excerpt',
-				'revisions',
 				'custom-fields',
 				'thumbnail',
 			),
