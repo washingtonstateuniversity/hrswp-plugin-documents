@@ -55,13 +55,14 @@ class Documents_Post_Type {
 		);
 
 		$documents_args = array(
-			'labels'          => $documents_labels,
-			'public'          => true,
-			'capability_type' => 'post',
-			'hierarchical'    => false,
-			'show_in_menu'    => 'upload.php',
-			'menu_icon'       => 'dashicons-media-document',
-			'supports'        => array(
+			'labels'            => $documents_labels,
+			'public'            => true,
+			'capability_type'   => 'post',
+			'hierarchical'      => false,
+			'show_in_menu'      => 'upload.php',
+			'show_in_nav_menus' => false,
+			'menu_icon'         => 'dashicons-media-document',
+			'supports'          => array(
 				'title',
 				'editor',
 				'author',
@@ -70,10 +71,10 @@ class Documents_Post_Type {
 				'custom-fields',
 				'thumbnail',
 			),
-			'rewrite'         => array( 'slug' => admin\get_plugin_info( 'slug' ) ),
-			'show_in_rest'    => true,
-			'template'        => array( array( 'hrswp/document-select' ) ),
-			'template_lock'   => 'all',
+			'rewrite'           => array( 'slug' => admin\get_plugin_info( 'slug' ) ),
+			'show_in_rest'      => true,
+			'template'          => array( array( 'hrswp/document-select' ) ),
+			'template_lock'     => 'all',
 		);
 
 		register_post_type( admin\get_plugin_info( 'post_type' ), $documents_args );
