@@ -66,7 +66,6 @@ class Documents_Post_Type {
 				'editor',
 				'author',
 				'excerpt',
-				'revisions',
 				'custom-fields',
 				'thumbnail',
 			),
