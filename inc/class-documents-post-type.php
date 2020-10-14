@@ -73,11 +73,11 @@ class Documents_Post_Type {
 				'custom-fields',
 				'thumbnail',
 			),
-			'taxonomies'      => array( 'category', 'post_tag', $hrs_unit_tax ),
-			'rewrite'         => array( 'slug' => admin\get_plugin_info( 'slug' ) ),
-			'show_in_rest'    => true,
-			'template'        => array( array( 'hrswp/document-select' ) ),
-			'template_lock'   => 'all',
+			'taxonomies'        => array( 'category', 'post_tag', $hrs_unit_tax ),
+			'rewrite'           => array( 'slug' => admin\get_plugin_info( 'slug' ) ),
+			'show_in_rest'      => true,
+			'template'          => array( array( 'hrswp/document-select' ) ),
+			'template_lock'     => 'all',
 		);
 
 		register_post_type( admin\get_plugin_info( 'post_type' ), $documents_args );
