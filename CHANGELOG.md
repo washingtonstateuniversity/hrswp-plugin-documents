@@ -20,6 +20,14 @@ Changelog formatting (http://semver.org/)
 ### Project Management
 -->
 
+## 1.1.0-alpha.20201014 (:construction: 2020-10-14)
+
+### Enhancements
+
+- Add taxonomies to documents CPT. (936a738)
+- Remove revision tracking since it only catches title. (e0537f1)
+- Hide from nav menus UI. (3112d16)
+
 ## 1.0.0 (2020-07-15)
 
 ### Features
