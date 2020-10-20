@@ -22,6 +22,7 @@ class Documents_Post_Type {
 	public function setup() {
 		add_action( 'init', array( $this, 'action_register_post_types' ) );
 		add_action( 'init', array( $this, 'action_register_post_meta' ) );
+		add_action( 'after_setup_theme', array( $this, 'action_flush_rewrite_rules' ) );
 		add_filter( 'template_include', array( $this, 'filter_serve_document_file' ), 10, 1 );
 	}
 
@@ -119,6 +120,22 @@ class Documents_Post_Type {
 				},
 			)
 		);
+	}
+
+	/**
+	 * Flushes rewrite rules only on initial activation.
+	 *
+	 * @since 1.1.0
+	 */
+	public function action_flush_rewrite_rules() {
+		$option = admin\get_plugin_info( 'option_name' );
+		$meta   = get_option( $option );
+
+		if ( is_admin() && 'activated' === $meta['status'] ) {
+			$meta['status'] = 'active';
+			update_option( $option, $meta );
+			flush_rewrite_rules();
+		}
 	}
 
 	/**
