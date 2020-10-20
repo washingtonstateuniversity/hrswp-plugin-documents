@@ -131,6 +131,7 @@ class Documents_Post_Type {
 		$option = admin\get_plugin_info( 'option_name' );
 		$meta   = get_option( $option );
 
+		// Only flush rules when status is 'activated', then change status to 'active'.
 		if ( is_admin() && 'activated' === $meta['status'] ) {
 			$meta['status'] = 'active';
 			update_option( $option, $meta );
