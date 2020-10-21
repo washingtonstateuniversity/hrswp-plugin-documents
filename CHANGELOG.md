@@ -20,13 +20,19 @@ Changelog formatting (http://semver.org/)
 ### Project Management
 -->
 
-## 1.1.0-alpha.20201014 (:construction: 2020-10-14)
+## 1.1.0-alpha.20201021 (:construction: 2020-10-21)
 
 ### Enhancements
 
+- Spruce up editor screen display with document thumbnail, title, and creation date. (51a1a71)
+- Change copy button from file URL to permalink. (51a1a71)
 - Add taxonomies to documents CPT. (936a738)
 - Remove revision tracking since it only catches title. (e0537f1)
 - Hide from nav menus UI. (3112d16)
+
+### Bug Fixes
+
+- Fix #17 flush rewrite rules on activation. (f3381f5)
 
 ## 1.0.0 (2020-07-15)
 
