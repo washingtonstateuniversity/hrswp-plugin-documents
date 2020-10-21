@@ -1,1 +1,1 @@
-.wp-block[data-type="hrswp/document-select"]{padding:0;transition:padding .15s cubic-bezier(.4,0,.2,1)}.wp-block[data-type="hrswp/document-select"].is-selected{padding:0 8px 8px}
+.wp-block[data-type="hrswp/document-select"]{padding:0 8px 8px}.wp-block[data-type="hrswp/document-select"] .components-disabled{overflow:hidden}@media (min-width:990px){.wp-block[data-type="hrswp/document-select"] img{float:left;margin-right:2rem}}
