@@ -103,6 +103,7 @@ class FileEdit extends Component {
 			media,
 			mediaId,
 			mediaHref,
+			permalink,
 		} = this.props;
 		const { hasError, showCopyConfirmation } = this.state;
 
@@ -186,13 +187,13 @@ class FileEdit extends Component {
 							{ isSelected && (
 								<ClipboardButton
 									isSecondary
-									text={ mediaHref }
+									text={ permalink }
 									className={
 										'wp-block-file__copy-url-button'
 									}
 									onCopy={ this.confirmCopyURL }
 									onFinishCopy={ this.resetCopyConfirmation }
-									disabled={ isBlobURL( mediaHref ) }
+									disabled={ isBlobURL( permalink ) }
 								>
 									{ showCopyConfirmation
 										? __( 'Copied!' )
@@ -227,6 +228,7 @@ export default compose( [
 
 		return {
 			media: mediaId === undefined ? undefined : getMedia( mediaId ),
+			permalink: select( 'core/editor' ).getPermalink(),
 			postType: select( 'core/editor' ).getCurrentPostType(),
 			mediaId,
 			mediaHref: select( 'core/editor' ).getEditedPostAttribute( 'meta' )[
