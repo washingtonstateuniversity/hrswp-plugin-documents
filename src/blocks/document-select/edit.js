@@ -10,12 +10,12 @@ const { getBlobByURL, isBlobURL, revokeBlobURL } = wp.blob;
 const { Animate, ClipboardButton, Disabled, withNotices } = wp.components;
 const { compose } = wp.compose;
 const { withSelect, withDispatch } = wp.data;
+const { dateI18n } = wp.date;
 const {
 	BlockControls,
 	BlockIcon,
 	MediaPlaceholder,
 	MediaReplaceFlow,
-	RichText,
 } = wp.blockEditor;
 const { Component } = wp.element;
 const { __ } = wp.i18n;
@@ -100,10 +100,13 @@ class FileEdit extends Component {
 			className,
 			isSelected,
 			noticeUI,
+			media,
 			mediaId,
 			mediaHref,
 		} = this.props;
 		const { hasError, showCopyConfirmation } = this.state;
+
+		const image = media ? media.media_details.sizes.medium : undefined;
 
 		if ( ! mediaHref || hasError ) {
 			return (
@@ -146,11 +149,39 @@ class FileEdit extends Component {
 								animateClassName
 							) }
 						>
-							<p>
-								<strong>Selected file:</strong>
-							</p>
 							<Disabled>
-								<RichText tagName="div" value={ mediaHref } />
+								{ media && (
+									<>
+										<img
+											src={ image.source_url }
+											alt={ '' }
+											width={ image.width }
+											height={ image.height }
+										/>
+										<p>
+											<strong>
+												{ __( 'File title: ' ) }
+											</strong>
+											{ media.title.rendered }
+										</p>
+										<p>
+											<strong>
+												{ __( 'Uploaded: ' ) }
+											</strong>
+											<time
+												dateTime={ dateI18n(
+													'c',
+													media.date
+												) }
+											>
+												{ dateI18n(
+													'F j, Y',
+													media.date
+												) }
+											</time>
+										</p>
+									</>
+								) }
 							</Disabled>
 							{ isSelected && (
 								<ClipboardButton
