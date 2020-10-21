@@ -1,8 +1,16 @@
 .wp-block[data-type="hrswp/document-select"] {
-	padding: 0;
-	transition: padding 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+	padding: 0 8px 8px;
+
+	& .components-disabled {
+		overflow: hidden;
+	}
 }
 
-.wp-block[data-type="hrswp/document-select"].is-selected {
-	padding: 0 8px 8px;
+@media (min-width: 990px ) {
+
+	.wp-block[data-type="hrswp/document-select"] img {
+		float: left;
+		margin-right: 2rem;
+	}
+
 }
