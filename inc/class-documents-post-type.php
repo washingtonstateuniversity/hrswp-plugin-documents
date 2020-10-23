@@ -167,6 +167,30 @@ class Documents_Post_Type {
 			return $template;
 		}
 
+		// Can't find a more graceful way to retrieve block attributes.
+		$blocks = parse_blocks( $post->post_content );
+		foreach ( $blocks as $block ) {
+			if ( 'hrswp/document-select' === $block['blockName'] ) {
+				if ( true === $block['attrs']['useExternalFile'] ) {
+					$file_href = get_post_meta( $post->ID, '_hrswp_document_file_href', true );
+
+					if ( ! $file_href ) {
+						$wp_query->posts          = array();
+						$wp_query->queried_object = null;
+						$wp->handle_404();
+
+						return get_404_template();
+					}
+
+					// Handle redirect.
+					// phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
+					if ( wp_redirect( esc_url( $file_href ) ) ) {
+						exit();
+					};
+				}
+			}
+		}
+
 		$file_id = get_post_meta( $post->ID, '_hrswp_document_file_id', true );
 		$file    = get_attached_file( $file_id );
 
