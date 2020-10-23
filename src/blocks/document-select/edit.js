@@ -120,22 +120,41 @@ class FileEdit extends Component {
 		const { useExternalFile } = attributes;
 		const image = media ? media.media_details.sizes.medium : undefined;
 
-		if ( ! mediaHref || hasError ) {
-			return (
-				<MediaPlaceholder
-					icon={ <BlockIcon icon={ icon } /> }
-					labels={ {
-						title: __( 'File' ),
-						instructions: __(
-							'Upload a file or pick one from your media library.'
-						),
-					} }
-					onSelect={ this.onSelectFile }
-					notices={ noticeUI }
-					onError={ this.onUploadError }
-					accept="*"
-				/>
-			);
+		const inspectorControls = (
+			<InspectorControls>
+				<PanelBody title={ __( 'Document source settings' ) }>
+					<ToggleControl
+						label={ __( 'Use external file' ) }
+						checked={ useExternalFile }
+						onChange={ ( value ) =>
+							setAttributes( { useExternalFile: value } )
+						}
+					/>
+				</PanelBody>
+			</InspectorControls>
+		);
+
+		if ( ! useExternalFile ) {
+			if ( ! mediaId || hasError ) {
+				return (
+					<>
+						{ inspectorControls }
+						<MediaPlaceholder
+							icon={ <BlockIcon icon={ icon } /> }
+							labels={ {
+								title: __( 'File' ),
+								instructions: __(
+									'Upload a file or pick one from your media library.'
+								),
+							} }
+							onSelect={ this.onSelectFile }
+							notices={ noticeUI }
+							onError={ this.onUploadError }
+							accept="*"
+						/>
+					</>
+				);
+			}
 		}
 
 		const classes = classnames( className, {
@@ -144,17 +163,7 @@ class FileEdit extends Component {
 
 		return (
 			<>
-				<InspectorControls>
-					<PanelBody title={ __( 'Document source settings' ) }>
-						<ToggleControl
-							label={ __( 'Use external file' ) }
-							checked={ useExternalFile }
-							onChange={ ( value ) =>
-								setAttributes( { useExternalFile: value } )
-							}
-						/>
-					</PanelBody>
-				</InspectorControls>
+				{ inspectorControls }
 				{ ! useExternalFile && (
 					<>
 						<BlockControls>
@@ -295,7 +304,6 @@ export default compose( [
 		return {
 			media: mediaId === undefined ? undefined : getMedia( mediaId ),
 			permalink: select( 'core/editor' ).getPermalink(),
-			postType: select( 'core/editor' ).getCurrentPostType(),
 			mediaId,
 			mediaHref: select( 'core/editor' ).getEditedPostAttribute( 'meta' )[
 				MEDIA_HREF_META_NAME
