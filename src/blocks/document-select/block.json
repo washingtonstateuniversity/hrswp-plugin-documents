@@ -5,5 +5,11 @@
 		"inserter": false,
 		"reusable": false,
 		"html": false
+	},
+	"attributes": {
+		"useExternalFile": {
+			"type": "boolean",
+			"default": false
+		}
 	}
 }
