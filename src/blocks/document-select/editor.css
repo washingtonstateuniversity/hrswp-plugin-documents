@@ -4,8 +4,6 @@
 	& .components-disabled {
 		overflow: hidden;
 	}
-
-
 }
 
 .wp-block-hrswp-document-select.use-external-file .block-editor-url-input input[type="text"] {
@@ -18,6 +16,7 @@
 	.wp-block[data-type="hrswp/document-select"] img {
 		float: left;
 		margin-right: 2rem;
+		margin-bottom: 1.5rem;
 	}
 
 	.wp-block-hrswp-document-select.use-external-file .block-editor-url-input input[type="text"] {
