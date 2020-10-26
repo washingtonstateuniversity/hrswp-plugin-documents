@@ -4,6 +4,13 @@
 	& .components-disabled {
 		overflow: hidden;
 	}
+
+
+}
+
+.wp-block-hrswp-document-select.use-external-file .block-editor-url-input input[type="text"] {
+	border: 1px solid #757575;
+	border-radius: 2px;
 }
 
 @media (min-width: 990px ) {
@@ -11,6 +18,10 @@
 	.wp-block[data-type="hrswp/document-select"] img {
 		float: left;
 		margin-right: 2rem;
+	}
+
+	.wp-block-hrswp-document-select.use-external-file .block-editor-url-input input[type="text"] {
+		font-size: 16px;
 	}
 
 }
