@@ -20,7 +20,7 @@ Changelog formatting (http://semver.org/)
 ### Project Management
 -->
 
-## 1.1.0-alpha.20201023 (:construction: 2020-10-23)
+## 1.1.0-alpha.cf70caf (:construction: 2020-10-27)
 
 ### Features
 
@@ -28,6 +28,7 @@ Changelog formatting (http://semver.org/)
 
 ### Enhancements
 
+- Allow setting feature image to override document thumbnail. (cf70caf)
 - Close #19 spruce up editor screen display with document thumbnail, title, and creation date. (51a1a71)
 - Change copy button from file URL to permalink. (51a1a71)
 - Add taxonomies to documents CPT. (936a738)
