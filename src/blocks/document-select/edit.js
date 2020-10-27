@@ -319,7 +319,7 @@ export default compose( [
 			media = featureId === undefined ? undefined : getMedia( featureId );
 			useFeatureImage = true;
 		} else {
-			media = mediaId === undefined ? undefined : getMedia( mediaId );
+			media = mediaId === 0 ? undefined : getMedia( mediaId );
 		}
 
 		return {
