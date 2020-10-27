@@ -20,7 +20,7 @@ Changelog formatting (http://semver.org/)
 ### Project Management
 -->
 
-## 1.1.0-alpha.cf70caf (:construction: 2020-10-27)
+## 1.1.0-alpha.3d88d9d (:construction: 2020-10-27)
 
 ### Features
 
@@ -37,6 +37,7 @@ Changelog formatting (http://semver.org/)
 
 ### Bug Fixes
 
+- Fix #23 getMedia throws error when media ID is 0. (3d88d9d)
 - Fix #17 flush rewrite rules on activation. (f3381f5)
 
 ## 1.0.0 (2020-07-15)

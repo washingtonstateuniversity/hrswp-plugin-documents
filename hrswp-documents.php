@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: HRSWP Documents
- * Version: 1.1.0-alpha.cf70caf
+ * Version: 1.1.0-alpha.3d88d9d
  * Description: A WSU HRS WordPress plugin to provide document management.
  * Author: Adam Turner, washingtonstateuniversity
  * Author URI: https://hrs.wsu.edu/
