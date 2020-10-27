@@ -111,14 +111,15 @@ class FileEdit extends Component {
 			isSelected,
 			noticeUI,
 			media,
-			mediaId,
 			mediaHref,
 			permalink,
 			setAttributes,
+			useFeatureImage,
 		} = this.props;
 		const { hasError, showCopyConfirmation } = this.state;
 		const { useExternalFile } = attributes;
 		const image = media ? media.media_details.sizes.medium : undefined;
+		const mediaId = media ? media.id : undefined;
 
 		const inspectorControls = (
 			<InspectorControls>
@@ -135,7 +136,7 @@ class FileEdit extends Component {
 		);
 
 		if ( ! useExternalFile ) {
-			if ( ! mediaId || hasError ) {
+			if ( ! media || hasError ) {
 				return (
 					<>
 						{ inspectorControls }
@@ -275,6 +276,14 @@ class FileEdit extends Component {
 									)
 								}
 							/>
+							{ useFeatureImage && media && (
+								<img
+									src={ image.source_url }
+									alt={ '' }
+									width={ image.width }
+									height={ image.height }
+								/>
+							) }
 						</div>
 					</div>
 				) }
@@ -297,18 +306,30 @@ export default compose( [
 		const { getMedia } = select( 'core' );
 		const { getSettings } = select( 'core/block-editor' );
 		const { mediaUpload } = getSettings();
+		const featureId = select( 'core/editor' ).getEditedPostAttribute(
+			'featured_media'
+		);
 		const mediaId = select( 'core/editor' ).getEditedPostAttribute(
 			'meta'
 		)[ MEDIA_ID_META_NAME ];
+		let media;
+		let useFeatureImage = false;
+
+		if ( 0 !== featureId ) {
+			media = featureId === undefined ? undefined : getMedia( featureId );
+			useFeatureImage = true;
+		} else {
+			media = mediaId === undefined ? undefined : getMedia( mediaId );
+		}
 
 		return {
-			media: mediaId === undefined ? undefined : getMedia( mediaId ),
+			media,
 			permalink: select( 'core/editor' ).getPermalink(),
-			mediaId,
 			mediaHref: select( 'core/editor' ).getEditedPostAttribute( 'meta' )[
 				MEDIA_HREF_META_NAME
 			],
 			mediaUpload,
+			useFeatureImage,
 		};
 	} ),
 	withNotices,
