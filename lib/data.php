@@ -42,6 +42,32 @@ function update_plugin_info() {
 add_action( 'admin_init', __NAMESPACE__ . '\update_plugin_info' );
 
 /**
+* Moves all HRSWP Documents custom post types to the trash.
+*
+* Uses a direct MySQL command with the $wpdb object in order to prevent
+* memory-based timeouts when trying to trash many posts.
+*
+* @since 1.1.0
+*
+* @return int|false The number of rows affected by the query or false if a MySQL error is encountered.
+*/
+function trash_documents() {
+	global $wpdb;
+
+	return $wpdb->query(
+		$wpdb->prepare(
+			"
+			UPDATE `$wpdb->posts`
+			SET `post_status` = %s
+			WHERE `post_type` = %s
+			",
+			'trash',
+			admin\get_plugin_info( 'post_type' )
+		)
+	);
+}
+
+/**
  * Activates the plugin.
  *
  * @since 1.0.0
@@ -82,12 +108,24 @@ function deactivate() {
 	$meta['status'] = 'deactivated';
 
 	update_option( $slug, $meta );
+	unregister_post_type( admin\get_plugin_info( 'post_type' ) );
+
+	flush_rewrite_rules();
 }
 
 /**
  * Uninstalls the plugin.
  *
+ * Uninstall will remove all options and delete all posts created by the HRS
+ * Courses custom post type plugin. Do not need to flush cache/temp or
+ * permalinks here, as that will have already been done on deactivation.
+ * Uses `get_posts()` and `wp_trash_post()` to do the heavy lifting.
+ *
+ * Note: `get_posts()` does not return posts with of auto_draft type, so
+ * currently these methods will not delete any from the database.
+ *
  * @since 1.0.0
+ * @since 1.1.0 Add post removal
  */
 function uninstall() {
 	if ( ! current_user_can( 'activate_plugins' ) ) {
@@ -96,4 +134,7 @@ function uninstall() {
 
 	// Delete plugin options.
 	delete_option( admin\get_plugin_info( 'option_name' ) );
+
+	// Move all Document posts to the trash.
+	trash_documents();
 }
