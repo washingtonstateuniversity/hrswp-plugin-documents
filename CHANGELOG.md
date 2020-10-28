@@ -20,10 +20,11 @@ Changelog formatting (http://semver.org/)
 ### Project Management
 -->
 
-## 1.1.0-alpha.5d0693e (:construction: 2020-10-27)
+## 1.1.0-alpha.67b67ce (:construction: 2020-10-28)
 
 ### Features
 
+- Close #27 create plugin data management actions for plugin deactivation and deletion. (67b67ce)
 - Close #21 allow setting external URL as document location.
 
 ### Enhancements
