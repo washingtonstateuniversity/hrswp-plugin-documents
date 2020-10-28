@@ -56,6 +56,7 @@ function trash_documents() {
 
 	$result = wp_cache_get( 'trash_posts', admin\get_plugin_info( 'post_type' ) );
 	if ( false === $result ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$result = $wpdb->query(
 			$wpdb->prepare(
 				"
