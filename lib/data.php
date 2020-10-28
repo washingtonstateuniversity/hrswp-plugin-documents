@@ -42,29 +42,35 @@ function update_plugin_info() {
 add_action( 'admin_init', __NAMESPACE__ . '\update_plugin_info' );
 
 /**
-* Moves all HRSWP Documents custom post types to the trash.
-*
-* Uses a direct MySQL command with the $wpdb object in order to prevent
-* memory-based timeouts when trying to trash many posts.
-*
-* @since 1.1.0
-*
-* @return int|false The number of rows affected by the query or false if a MySQL error is encountered.
-*/
+ * Moves all HRSWP Documents custom post types to the trash.
+ *
+ * Uses a direct MySQL command with the $wpdb object in order to prevent
+ * memory-based timeouts when trying to trash many posts.
+ *
+ * @since 1.1.0
+ *
+ * @return int|false The number of rows affected by the query or false if a MySQL error is encountered.
+ */
 function trash_documents() {
 	global $wpdb;
 
-	return $wpdb->query(
-		$wpdb->prepare(
-			"
-			UPDATE `$wpdb->posts`
-			SET `post_status` = %s
-			WHERE `post_type` = %s
-			",
-			'trash',
-			admin\get_plugin_info( 'post_type' )
-		)
-	);
+	$result = wp_cache_get( 'trash_posts', admin\get_plugin_info( 'post_type' ) );
+	if ( false === $result ) {
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"
+				UPDATE `$wpdb->posts`
+				SET `post_status` = %s
+				WHERE `post_type` = %s
+				",
+				'trash',
+				admin\get_plugin_info( 'post_type' )
+			)
+		);
+		wp_cache_set( 'trash_posts', $result, admin\get_plugin_info( 'post_type' ) );
+	}
+
+	return $result;
 }
 
 /**
