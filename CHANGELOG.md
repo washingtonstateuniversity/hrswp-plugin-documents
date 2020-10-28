@@ -20,7 +20,7 @@ Changelog formatting (http://semver.org/)
 ### Project Management
 -->
 
-## 1.1.0-alpha.67b67ce (:construction: 2020-10-28)
+## 1.1.0-alpha.3d9f8e5 (:construction: 2020-10-28)
 
 ### Features
 
@@ -38,6 +38,7 @@ Changelog formatting (http://semver.org/)
 
 ### Bug Fixes
 
+- Use `wp_cache_*` with uninstall function and ignore direct db call warning. (3d9f8e5)
 - Fix #23 getMedia throws error when media ID is 0. (3d88d9d)
 - Fix #17 flush rewrite rules on activation. (f3381f5)
 
