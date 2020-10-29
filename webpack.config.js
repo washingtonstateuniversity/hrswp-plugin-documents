@@ -2,7 +2,8 @@
  * External dependencies
  */
 const { BundleAnalyzerPlugin } = require( 'webpack-bundle-analyzer' );
-const { resolve } = require( 'path' );
+const CopyPlugin = require( 'copy-webpack-plugin' );
+const { basename, dirname, resolve } = require( 'path' );
 
 /**
  * WordPress dependencies
@@ -56,6 +57,18 @@ const config = {
 		// WP_BUNDLE_ANALYZER global variable enables utility that represents
 		// bundle content as a convenient interactive zoomable treemap.
 		process.env.WP_BUNDLE_ANALYZER && new BundleAnalyzerPlugin(),
+		new CopyPlugin( {
+			patterns: [
+				{
+					from: './src/blocks/**/index.php',
+					to: 'blocks/',
+					transformPath( targetPath ) {
+						const dir = basename( dirname( targetPath ) );
+						return `blocks/${ dir }.php`;
+					},
+				},
+			],
+		} ),
 		new DependencyExtractionWebpackPlugin( { injectPolyfill: true } ),
 	].filter( Boolean ),
 	stats: {

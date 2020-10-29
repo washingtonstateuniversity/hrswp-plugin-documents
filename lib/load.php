@@ -19,4 +19,6 @@ require dirname( __FILE__ ) . '/data.php';
 
 require dirname( __DIR__ ) . '/inc/class-documents-post-type.php';
 
+require dirname( __DIR__ ) . '/build/blocks/documents-list.php';
+
 Documents_Post_Type\Documents_Post_Type::factory();
