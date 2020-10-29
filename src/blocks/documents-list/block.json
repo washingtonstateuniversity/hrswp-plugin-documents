@@ -1,0 +1,8 @@
+{
+	"name": "hrswp/documents-list",
+	"category": "media",
+	"supports": {
+		"align": true,
+		"html": false
+	}
+}

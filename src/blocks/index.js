@@ -6,6 +6,7 @@ const { registerBlockType } = wp.blocks;
 /**
  * Internal dependencies
  */
+import * as documentsList from './documents-list';
 import * as documentSelect from './document-select';
 
 /**
@@ -19,7 +20,7 @@ import * as documentSelect from './document-select';
  * ```
  */
 export const registerBlocks = () => {
-	[ documentSelect ].forEach( ( block ) => {
+	[ documentsList, documentSelect ].forEach( ( block ) => {
 		if ( ! block ) {
 			return;
 		}
