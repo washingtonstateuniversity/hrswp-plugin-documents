@@ -9,9 +9,11 @@ import classnames from 'classnames';
 const { getBlobByURL, isBlobURL, revokeBlobURL } = wp.blob;
 const {
 	Animate,
+	Button,
 	ClipboardButton,
 	Disabled,
 	PanelBody,
+	PanelRow,
 	ToggleControl,
 	withNotices,
 } = wp.components;
@@ -48,6 +50,7 @@ class FileEdit extends Component {
 		this.confirmCopyURL = this.confirmCopyURL.bind( this );
 		this.resetCopyConfirmation = this.resetCopyConfirmation.bind( this );
 		this.onUploadError = this.onUploadError.bind( this );
+		this.clearMedia = this.clearMedia.bind( this );
 
 		this.state = {
 			hasError: false,
@@ -88,6 +91,11 @@ class FileEdit extends Component {
 			this.props.updateMeta( media.id, MEDIA_ID_META_NAME );
 			this.props.updateMeta( media.url, MEDIA_HREF_META_NAME );
 		}
+	}
+
+	clearMedia() {
+		this.setState( { hasError: false } );
+		this.props.updateMeta( 0, MEDIA_ID_META_NAME );
 	}
 
 	onUploadError( message ) {
@@ -131,6 +139,18 @@ class FileEdit extends Component {
 							setAttributes( { useExternalFile: value } )
 						}
 					/>
+					{ ! useExternalFile && (
+						<PanelRow>
+							<Button
+								isSecondary
+								isSmall
+								className="block-library-hrswp-documents__reset-button"
+								onClick={ this.clearMedia }
+							>
+								{ __( 'Clear Document' ) }
+							</Button>
+						</PanelRow>
+					) }
 				</PanelBody>
 			</InspectorControls>
 		);
