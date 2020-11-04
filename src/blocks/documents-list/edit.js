@@ -120,9 +120,9 @@ class DocumentsListEdit extends Component {
 
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody title={ __( 'Post content settings' ) }>
+				<PanelBody title={ __( 'Excerpt settings' ) }>
 					<ToggleControl
-						label={ __( 'Post content' ) }
+						label={ __( 'Display excerpt' ) }
 						checked={ displayDocumentExcerpt }
 						onChange={ ( value ) =>
 							setAttributes( { displayDocumentExcerpt: value } )
@@ -141,30 +141,30 @@ class DocumentsListEdit extends Component {
 					) }
 				</PanelBody>
 
-				<PanelBody title={ __( 'Post meta settings' ) }>
+				<PanelBody title={ __( 'Document meta settings' ) }>
 					<ToggleControl
-						label={ __( 'Display post date' ) }
+						label={ __( 'Display document date' ) }
 						checked={ displayDocumentDate }
 						onChange={ ( value ) =>
 							setAttributes( { displayDocumentDate: value } )
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Display post category' ) }
+						label={ __( 'Display document category' ) }
 						checked={ displayDocumentCategory }
 						onChange={ ( value ) =>
 							setAttributes( { displayDocumentCategory: value } )
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Display post tag' ) }
+						label={ __( 'Display document tag' ) }
 						checked={ displayDocumentTag }
 						onChange={ ( value ) =>
 							setAttributes( { displayDocumentTag: value } )
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Display post taxonomy' ) }
+						label={ __( 'Display document taxonomy' ) }
 						checked={ displayDocumentTaxonomy }
 						onChange={ ( value ) =>
 							setAttributes( { displayDocumentTaxonomy: value } )
@@ -172,9 +172,9 @@ class DocumentsListEdit extends Component {
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Featured image settings' ) }>
+				<PanelBody title={ __( 'Document image settings' ) }>
 					<ToggleControl
-						label={ __( 'Display featured image' ) }
+						label={ __( 'Display document image' ) }
 						checked={ displayFeaturedImage }
 						onChange={ ( value ) =>
 							setAttributes( { displayFeaturedImage: value } )
@@ -209,7 +209,7 @@ class DocumentsListEdit extends Component {
 									} )
 								}
 							/>
-							<BaseControl>
+							<BaseControl className="block-editor-image-alignment-control__row">
 								<BaseControl.VisualLabel>
 									{ __( 'Image alignment' ) }
 								</BaseControl.VisualLabel>
@@ -492,7 +492,6 @@ export default withSelect( ( select, props ) => {
 	const { getEntityRecords, getMedia, getTaxonomies } = select( 'core' );
 	const { getSettings } = select( 'core/block-editor' );
 	const { imageSizes, imageDimensions } = getSettings();
-	let image;
 
 	const DocumentsListQuery = pickBy(
 		{
@@ -531,6 +530,8 @@ export default withSelect( ( select, props ) => {
 	const documentsList = ! Array.isArray( posts )
 		? posts
 		: posts.map( ( post ) => {
+				let image, url;
+
 				if ( 0 !== post.featured_media ) {
 					image = getMedia( post.featured_media );
 				} else if ( 0 !== post.meta._hrswp_document_file_id ) {
@@ -538,7 +539,8 @@ export default withSelect( ( select, props ) => {
 				}
 
 				if ( image ) {
-					let url = get(
+					// Returns the appropriate image src url from the image object.
+					url = get(
 						image,
 						[
 							'media_details',
@@ -548,13 +550,17 @@ export default withSelect( ( select, props ) => {
 						],
 						null
 					);
+
 					if ( ! url ) {
 						url = get( image, 'source_url', null );
 					}
-					return { ...post, featuredImageSourceUrl: url };
+				} else {
+					// Return an image src url for a fallback image.
+					url =
+						'https://hrs.test/wp-includes/images/media/document.png';
 				}
 
-				return post;
+				return { ...post, featuredImageSourceUrl: url };
 		  } );
 
 	return {
