@@ -7,6 +7,8 @@
 
 namespace HRSWP\Documents\DocumentsList;
 
+use HrswpDocuments as admin;
+
 /**
  * Registers and renders the `hrswp/documents-list` block
  *
@@ -51,6 +53,7 @@ class DocumentsList {
 	 */
 	public function render( $attributes ) {
 		$args = array(
+			'post_type'        => admin\get_plugin_info( 'post_type' ),
 			'posts_per_page'   => $attributes['documentsToShow'],
 			'post_status'      => 'publish',
 			'order'            => $attributes['order'],
@@ -91,18 +94,33 @@ class DocumentsList {
 		$posts = get_posts( $args );
 
 		$list_items_markup = '';
-
 		foreach ( $posts as $post ) {
+			$document_id = get_post_meta( $post->ID, '_hrswp_document_file_id', true );
+
+			$image_style = '';
+			if ( isset( $attributes['featuredImageSizeWidth'] ) ) {
+				$image_style .= sprintf( 'max-width:%spx;', $attributes['featuredImageSizeWidth'] );
+			}
+			if ( isset( $attributes['featuredImageSizeHeight'] ) ) {
+				$image_style .= sprintf( 'max-height:%spx;', $attributes['featuredImageSizeHeight'] );
+			}
 
 			$list_items_markup .= '<div class="wp-block-hrswp-documents-list--list-item">';
-
-			if ( $attributes['displayFeaturedImage'] && has_post_thumbnail( $post ) ) {
-				$image_style = '';
-				if ( isset( $attributes['featuredImageSizeWidth'] ) ) {
-					$image_style .= sprintf( 'max-width:%spx;', $attributes['featuredImageSizeWidth'] );
-				}
-				if ( isset( $attributes['featuredImageSizeHeight'] ) ) {
-					$image_style .= sprintf( 'max-height:%spx;', $attributes['featuredImageSizeHeight'] );
+			if ( $attributes['displayFeaturedImage'] ) {
+				// If there is a feature image selected it overrides the thumbnail.
+				if ( has_post_thumbnail( $post ) ) {
+					$image_html = get_the_post_thumbnail(
+						$post,
+						$attributes['featuredImageSizeSlug'],
+						array( 'style' => $image_style )
+					);
+				} else {
+					$image_html = wp_get_attachment_image(
+						$document_id,
+						$attributes['featuredImageSizeSlug'],
+						true,
+						array( 'style' => $image_style )
+					);
 				}
 
 				$image_classes = 'wp-block-hrswp-documents-list--featured-image';
@@ -116,14 +134,9 @@ class DocumentsList {
 				$list_items_markup .= sprintf(
 					'<figure class="%1$s">%2$s</figure>',
 					$image_classes,
-					get_the_post_thumbnail(
-						$post,
-						$attributes['featuredImageSizeSlug'],
-						array(
-							'style' => $image_style,
-						)
-					)
+					$image_html
 				);
+
 			}
 
 			$list_items_markup .= '<div class="wp-block-hrswp-documents-list--body">';
