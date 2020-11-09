@@ -60,23 +60,9 @@
 	font-size: var(--font-size-1);
 	font-weight: 600;
 	line-height: 1.35;
-	margin-top: auto;
 
 	& span {
 		text-transform: uppercase;
-	}
-
-	& .wp-block-hrswp-documents-list--post_tag-list span {
-		border: 0;
-		clip: rect(1px, 1px, 1px, 1px);
-		clip-path: inset(50%);
-		height: 1px;
-		margin: -1px;
-		overflow: hidden;
-		padding: 0;
-		position: absolute !important;
-		width: 1px;
-		word-wrap: normal !important;
 	}
 
 	& a {
@@ -91,25 +77,6 @@
 .wp-block-hrswp-documents-list.has-full-content .wp-block-hrswp-documents-list--meta,
 .wp-block-hrswp-documents-list.has-excerpt .wp-block-hrswp-documents-list--meta {
 	padding-top: 1rem;
-}
-
-.wp-block-hrswp-documents-list--post-date::before,
-.wp-block-hrswp-documents-list--post_tag-list::before {
-	background-image: url(icons/tag.svg);
-	background-position: center 100%;
-	background-repeat: no-repeat;
-	background-size: contain;
-	content: "";
-	display: inline-block;
-	height: 1em;
-	margin: 0 0.4em -0.2em 0;
-	margin-bottom: -0.2em;
-	width: 1em;
-}
-
-.wp-block-hrswp-documents-list--post-date::before {
-	background-image: url(icons/event.svg);
-	margin: 0 0.2em -0.1em 0;
 }
 
 .wp-block-hrswp-documents-list--post-excerpt,
@@ -152,15 +119,15 @@
 .wp-block-hrswp-documents-list:not(.is-grid) .wp-block-hrswp-documents-list--featured-image {
 
 	&.size-thumbnail {
-		width: 68px;
+		width: 150px;
 	}
 
 	&.size-small {
-		width: 91px;
+		width: 200px;
 	}
 
 	&.size-medium {
-		width: 180px;
+		width: 250px;
 	}
 
 	&.size-large {

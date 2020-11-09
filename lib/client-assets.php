@@ -48,3 +48,38 @@ function action_enqueue_block_editor_assets() {
 	);
 }
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\action_enqueue_block_editor_assets' );
+
+/**
+ * Enqueues the plugin frontend scripts.
+ *
+ * @since 1.1.0
+ */
+function action_enqueue_block_assets() {
+	// Only load frontend scripts if one of the blocks is active on the page.
+	$has_block = false;
+	$blocks    = array(
+		'hrswp/documents-list' => 'documents.list.php',
+	);
+	foreach ( $blocks as $name => $file ) {
+		if ( ! is_singular() || false !== has_block( $name ) ) {
+			$has_block = true;
+			continue;
+		}
+	}
+
+	if ( ! $has_block ) {
+		return;
+	}
+
+	$slug    = admin\get_plugin_info( 'slug' );
+	$path    = admin\get_plugin_info( 'plugin_file_uri' );
+	$version = admin\get_plugin_info( 'version' );
+
+	wp_enqueue_style(
+		$slug . 'style',
+		plugins_url( 'build/style.css', $path ),
+		array(),
+		$version
+	);
+}
+add_action( 'enqueue_block_assets', __NAMESPACE__ . '\action_enqueue_block_assets' );
