@@ -8,7 +8,7 @@ const { __ } = wp.i18n;
  */
 import edit from './edit';
 import metadata from './block.json';
-import { file as icon } from './icons';
+import { icon } from './icons';
 
 const { name, attributes, supports } = metadata;
 

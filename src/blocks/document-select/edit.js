@@ -34,7 +34,7 @@ const { __ } = wp.i18n;
 /**
  * Internal dependencies
  */
-import { file as icon } from './icons';
+import { icon } from './icons';
 
 /**
  * Constants
