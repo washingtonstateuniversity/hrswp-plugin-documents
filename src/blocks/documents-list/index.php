@@ -91,7 +91,8 @@ class DocumentsList {
 		}
 		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
-		$posts = get_posts( $args );
+		$posts            = get_posts( $args );
+		$registered_sizes = wp_get_registered_image_subsizes();
 
 		$list_items_markup = '';
 		foreach ( $posts as $post ) {
@@ -118,8 +119,19 @@ class DocumentsList {
 					$image_html = wp_get_attachment_image(
 						$document_id,
 						$attributes['featuredImageSizeSlug'],
-						true,
+						false,
 						array( 'style' => $image_style )
+					);
+				}
+
+				if ( ! $image_html ) {
+					$image_html = sprintf(
+						'<img width="%1$s" height="%2$s" src="%3$s" class="attachment-%4$s size-%4$s" alt loading="lazy" style="%5$s">',
+						$registered_sizes[ $attributes['featuredImageSizeSlug'] ]['width'],
+						$registered_sizes[ $attributes['featuredImageSizeSlug'] ]['height'],
+						plugins_url( 'build/images/document.svg', admin\get_plugin_info( 'plugin_file_uri' ) ),
+						$attributes['featuredImageSizeSlug'],
+						$image_style
 					);
 				}
 
@@ -184,7 +196,7 @@ class DocumentsList {
 						$prefix = sprintf(
 							'<p class="wp-block-hrswp-documents-list--%1$s-list"><span>%2$s: </span>',
 							esc_attr( $taxonomy_name ),
-							__( 'More on', 'hrswp-documents' )
+							__( 'More from', 'hrswp-documents' )
 						);
 
 						$post_meta_markup .= get_the_term_list( $post->ID, $taxonomy_name, $prefix, ', ', '</p>' );
@@ -221,8 +233,7 @@ class DocumentsList {
 			}
 			if ( isset( $attributes['displayDocumentDate'] ) && $attributes['displayDocumentDate'] ) {
 				$post_meta_markup .= sprintf(
-					'<p class="wp-block-hrswp-documents-list--post-date">%1$s <time datetime="%2$s">%3$s</time></p>',
-					__( 'Published on', 'hrswp-documents' ),
+					'<p class="wp-block-hrswp-documents-list--post-date"><time datetime="%1$s">%2$s</time></p>',
 					esc_attr( get_the_date( 'c', $post ) ),
 					esc_html( get_the_date( '', $post ) )
 				);

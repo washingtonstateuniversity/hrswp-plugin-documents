@@ -46,7 +46,7 @@ export const PostMeta = ( props ) => {
 						if ( ! displayDocumentCategory ) {
 							return null;
 						}
-						prefix = __( 'More on: ' );
+						prefix = __( 'More from: ' );
 					} else if ( 'post_tag' === taxonomy.slug ) {
 						if ( ! displayDocumentTag ) {
 							return null;
@@ -71,7 +71,6 @@ export const PostMeta = ( props ) => {
 				} ) }
 			{ displayDocumentDate && post.date_gmt && (
 				<p className="wp-block-hrswp-documents-list--post-date">
-					{ __( 'Published on ' ) }
 					<time dateTime={ format( 'c', post.date_gmt ) }>
 						{ dateI18n( dateFormat, post.date_gmt ) }
 					</time>

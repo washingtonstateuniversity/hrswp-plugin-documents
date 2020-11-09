@@ -506,6 +506,7 @@ export default withSelect( ( select, props ) => {
 			DocumentsListQuery[ slug ] = terms.map( ( term ) => term.id );
 		} );
 	}
+
 	const posts = getEntityRecords(
 		'postType',
 		'hrswp_documents',
@@ -555,9 +556,9 @@ export default withSelect( ( select, props ) => {
 						url = get( image, 'source_url', null );
 					}
 				} else {
-					// Return an image src url for a fallback image.
+					// @todo Make this dynamic.
 					url =
-						'https://hrs.test/wp-includes/images/media/document.png';
+						'https://hrs.test/wp-content/plugins/hrswp-plugin-documents/build/images/document.svg';
 				}
 
 				return { ...post, featuredImageSourceUrl: url };

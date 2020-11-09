@@ -67,6 +67,10 @@ const config = {
 						return `blocks/${ dir }.php`;
 					},
 				},
+				{
+					from: './src/images/**/*',
+					to: 'images/[name].[ext]',
+				},
 			],
 		} ),
 		new DependencyExtractionWebpackPlugin( { injectPolyfill: true } ),
