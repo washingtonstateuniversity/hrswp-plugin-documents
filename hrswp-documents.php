@@ -9,7 +9,7 @@
  * Text Domain: hrswp-documents
  * Requires at least: 5.5
  * Tested up to: 5.5
- * Requires PHP: 7.0
+ * Requires PHP: 7.1
  *
  * @package HRSWP_Documents
  * @since 1.0.0
