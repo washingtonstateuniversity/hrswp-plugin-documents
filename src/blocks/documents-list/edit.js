@@ -328,7 +328,7 @@ class DocumentsListEdit extends Component {
 				<BlockControls>
 					<ToolbarGroup controls={ layoutControls } />
 				</BlockControls>
-				<div
+				<ul
 					className={ classnames( className, {
 						'is-grid': documentLayout === 'grid',
 						'has-feature-image': displayFeaturedImage,
@@ -378,34 +378,33 @@ class DocumentsListEdit extends Component {
 						);
 
 						return (
-							<div
+							<li
 								className="wp-block-hrswp-documents-list--list-item"
 								key={ i }
 							>
-								{ displayFeaturedImage && (
-									<figure className={ imageClasses }>
-										{ imageSourceUrl ? (
-											<img
-												src={ imageSourceUrl }
-												alt=""
-												style={ {
-													maxWidth: featuredImageSizeWidth,
-													maxHeight: featuredImageSizeHeight,
-												} }
-											/>
-										) : (
-											file
-										) }
-									</figure>
-								) }
-
-								<div className="wp-block-hrswp-documents-list--body">
-									<h3 className="wp-block-hrswp-documents-list--heading">
-										<a
-											href={ post.link }
-											target="_blank"
-											rel="noreferrer noopener"
-										>
+								<a
+									href={ post.link }
+									target="_blank"
+									rel="noreferrer noopener"
+								>
+									{ displayFeaturedImage && (
+										<figure className={ imageClasses }>
+											{ imageSourceUrl ? (
+												<img
+													src={ imageSourceUrl }
+													alt=""
+													style={ {
+														maxWidth: featuredImageSizeWidth,
+														maxHeight: featuredImageSizeHeight,
+													} }
+												/>
+											) : (
+												file
+											) }
+										</figure>
+									) }
+									<div className="wp-block-hrswp-documents-list--body">
+										<span className="wp-block-hrswp-documents-list--heading">
 											{ titleTrimmed ? (
 												<RawHTML>
 													{ titleTrimmed }
@@ -413,32 +412,33 @@ class DocumentsListEdit extends Component {
 											) : (
 												__( '(no title)' )
 											) }
-										</a>
-									</h3>
-									{ displayDocumentExcerpt && (
-										<p className="wp-block-hrswp-documents-list--post-excerpt">
-											{ postExcerpt }
-										</p>
-									) }
-									{ displayDocumentDate && post.date_gmt && (
-										<time
-											className="wp-block-hrswp-documents-list--post-date"
-											dateTime={ format(
-												'c',
-												post.date_gmt
+										</span>
+										{ displayDocumentExcerpt && (
+											<span className="wp-block-hrswp-documents-list--post-excerpt">
+												{ postExcerpt }
+											</span>
+										) }
+										{ displayDocumentDate &&
+											post.date_gmt && (
+												<time
+													className="wp-block-hrswp-documents-list--post-date"
+													dateTime={ format(
+														'c',
+														post.date_gmt
+													) }
+												>
+													{ dateI18n(
+														dateFormat,
+														post.date_gmt
+													) }
+												</time>
 											) }
-										>
-											{ dateI18n(
-												dateFormat,
-												post.date_gmt
-											) }
-										</time>
-									) }
-								</div>
-							</div>
+									</div>
+								</a>
+							</li>
 						);
 					} ) }
-				</div>
+				</ul>
 			</>
 		);
 	}

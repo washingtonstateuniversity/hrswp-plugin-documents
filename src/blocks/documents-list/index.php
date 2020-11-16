@@ -154,7 +154,10 @@ class DocumentsList {
 				$image_style .= sprintf( 'max-height:%spx;', $image_height );
 			}
 
-			$list_items_markup .= '<li class="wp-block-hrswp-documents-list--list-item">';
+			$list_items_markup .= sprintf(
+				'<li class="wp-block-hrswp-documents-list--list-item"><a href="%s">',
+				esc_url( get_permalink( $post ) )
+			);
 
 			if ( $display_image ) {
 				// If there is a feature image selected it overrides the thumbnail.
@@ -208,8 +211,7 @@ class DocumentsList {
 				$title = __( '(no title)', 'hrswp-documents' );
 			}
 			$list_items_markup .= sprintf(
-				'<span class="wp-block-hrswp-documents-list--heading">%2$s</a></span>',
-				esc_url( get_permalink( $post ) ),
+				'<span class="wp-block-hrswp-documents-list--heading">%s</span>',
 				$title
 			);
 
@@ -230,7 +232,7 @@ class DocumentsList {
 				);
 			}
 
-			$list_items_markup .= "</div></li>\n";
+			$list_items_markup .= "</div></a></li>\n";
 		}
 
 		remove_filter( 'excerpt_length', array( $this, 'get_excerpt_length' ), 20 );
