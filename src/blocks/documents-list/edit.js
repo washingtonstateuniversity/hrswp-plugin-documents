@@ -39,7 +39,7 @@ const { withSelect } = wp.data;
 /**
  * Internal dependencies
  */
-import { pin, list, grid } from './icons';
+import { file, pin, list, grid } from './icons';
 import { PostMeta } from './post-meta';
 import {
 	MIN_EXCERPT_LENGTH,
@@ -416,9 +416,9 @@ class DocumentsListEdit extends Component {
 								className="wp-block-hrswp-documents-list--list-item"
 								key={ i }
 							>
-								{ displayFeaturedImage && imageSourceUrl && (
+								{ displayFeaturedImage && (
 									<figure className={ imageClasses }>
-										{ imageSourceUrl && (
+										{ imageSourceUrl ? (
 											<img
 												src={ imageSourceUrl }
 												alt=""
@@ -427,6 +427,8 @@ class DocumentsListEdit extends Component {
 													maxHeight: featuredImageSizeHeight,
 												} }
 											/>
+										) : (
+											file
 										) }
 									</figure>
 								) }
@@ -555,10 +557,6 @@ export default withSelect( ( select, props ) => {
 					if ( ! url ) {
 						url = get( image, 'source_url', null );
 					}
-				} else {
-					// @todo Make this dynamic.
-					url =
-						'https://hrs.test/wp-content/plugins/hrswp-plugin-documents/build/images/document.svg';
 				}
 
 				return { ...post, featuredImageSourceUrl: url };
