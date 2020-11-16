@@ -35,12 +35,12 @@ const {
 	__experimentalImageSizeControl,
 } = wp.blockEditor;
 const { withSelect } = wp.data;
+const { dateI18n, format, __experimentalGetSettings } = wp.date;
 
 /**
  * Internal dependencies
  */
 import { file, pin, list, grid } from './icons';
-import { PostMeta } from './post-meta';
 import {
 	MIN_EXCERPT_LENGTH,
 	MAX_EXCERPT_LENGTH,
@@ -98,9 +98,6 @@ class DocumentsListEdit extends Component {
 			displayFeaturedImage,
 			displayDocumentExcerpt,
 			displayDocumentDate,
-			displayDocumentCategory,
-			displayDocumentTag,
-			displayDocumentTaxonomy,
 			documentLayout,
 			columns,
 			order,
@@ -120,7 +117,7 @@ class DocumentsListEdit extends Component {
 
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody title={ __( 'Excerpt settings' ) }>
+				<PanelBody title={ __( 'Display settings' ) }>
 					<ToggleControl
 						label={ __( 'Display excerpt' ) }
 						checked={ displayDocumentExcerpt }
@@ -139,9 +136,6 @@ class DocumentsListEdit extends Component {
 							max={ MAX_EXCERPT_LENGTH }
 						/>
 					) }
-				</PanelBody>
-
-				<PanelBody title={ __( 'Document meta settings' ) }>
 					<ToggleControl
 						label={ __( 'Display document date' ) }
 						checked={ displayDocumentDate }
@@ -149,30 +143,6 @@ class DocumentsListEdit extends Component {
 							setAttributes( { displayDocumentDate: value } )
 						}
 					/>
-					<ToggleControl
-						label={ __( 'Display document category' ) }
-						checked={ displayDocumentCategory }
-						onChange={ ( value ) =>
-							setAttributes( { displayDocumentCategory: value } )
-						}
-					/>
-					<ToggleControl
-						label={ __( 'Display document tag' ) }
-						checked={ displayDocumentTag }
-						onChange={ ( value ) =>
-							setAttributes( { displayDocumentTag: value } )
-						}
-					/>
-					<ToggleControl
-						label={ __( 'Display document taxonomy' ) }
-						checked={ displayDocumentTaxonomy }
-						onChange={ ( value ) =>
-							setAttributes( { displayDocumentTaxonomy: value } )
-						}
-					/>
-				</PanelBody>
-
-				<PanelBody title={ __( 'Document image settings' ) }>
 					<ToggleControl
 						label={ __( 'Display document image' ) }
 						checked={ displayFeaturedImage }
@@ -350,6 +320,8 @@ class DocumentsListEdit extends Component {
 			},
 		];
 
+		const dateFormat = __experimentalGetSettings().formats.date;
+
 		return (
 			<>
 				{ inspectorControls }
@@ -386,12 +358,6 @@ class DocumentsListEdit extends Component {
 							[ `size-${ featuredImageSizeSlug }` ]: !! featuredImageSizeSlug,
 							[ `align${ featuredImageAlign }` ]: !! featuredImageAlign,
 						} );
-
-						const hasPostMeta =
-							displayDocumentDate ||
-							displayDocumentCategory ||
-							displayDocumentTag ||
-							displayDocumentTaxonomy;
 
 						const needsReadMore =
 							excerptLength <
@@ -454,24 +420,19 @@ class DocumentsListEdit extends Component {
 											{ postExcerpt }
 										</p>
 									) }
-									{ hasPostMeta && (
-										<PostMeta
-											displayDocumentCategory={
-												displayDocumentCategory
-											}
-											displayDocumentDate={
-												displayDocumentDate
-											}
-											displayDocumentTag={
-												displayDocumentTag
-											}
-											displayDocumentTaxonomy={
-												displayDocumentTaxonomy
-											}
-											post={ post }
-											taxonomies={ taxonomies }
-											termLists={ termLists }
-										/>
+									{ displayDocumentDate && post.date_gmt && (
+										<time
+											className="wp-block-hrswp-documents-list--post-date"
+											dateTime={ format(
+												'c',
+												post.date_gmt
+											) }
+										>
+											{ dateI18n(
+												dateFormat,
+												post.date_gmt
+											) }
+										</time>
 									) }
 								</div>
 							</div>

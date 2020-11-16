@@ -87,9 +87,6 @@ class DocumentsList {
 			'displayDocumentDate'     => $display_date,
 			'displayFeaturedImage'    => $display_image,
 			'displayDocumentExcerpt'  => $display_excerpt,
-			'displayDocumentCategory' => $display_category,
-			'displayDocumentTag'      => $display_tag,
-			'displayDocumentTaxonomy' => $display_tax,
 			'documentLayout'          => $layout,
 			'columns'                 => $columns,
 			'featuredImageSizeHeight' => $image_height,
@@ -202,7 +199,6 @@ class DocumentsList {
 					$image_classes,
 					$image_html
 				);
-
 			}
 
 			$list_items_markup .= '<div class="wp-block-hrswp-documents-list--body">';
@@ -226,77 +222,11 @@ class DocumentsList {
 				);
 			}
 
-			$post_meta_markup = '';
-			if (
-				isset( $display_category ) ||
-				isset( $display_tag ) ||
-				isset( $display_tax )
-			) {
-				$taxonomy_names = get_object_taxonomies( $post->post_type );
-
-				// Move `post_tags` to the end.
-				$taxonomy_names[] = array_splice(
-					$taxonomy_names,
-					array_search( 'post_tag', $taxonomy_names, true ),
-					1
-				)[0];
-
-				foreach ( $taxonomy_names as $taxonomy_name ) {
-					if (
-						'category' === $taxonomy_name &&
-						isset( $display_category ) &&
-						$display_category
-					) {
-						$prefix = sprintf(
-							'<p class="wp-block-hrswp-documents-list--%1$s-list"><span>%2$s: </span>',
-							esc_attr( $taxonomy_name ),
-							__( 'More from', 'hrswp-documents' )
-						);
-
-						$post_meta_markup .= get_the_term_list( $post->ID, $taxonomy_name, $prefix, ', ', '</p>' );
-					} elseif (
-						'post_tag' === $taxonomy_name &&
-						isset( $display_tag ) &&
-						$display_tag
-					) {
-						$prefix = sprintf(
-							'<p class="wp-block-hrswp-documents-list--%1$s-list"><span>%2$s: </span>',
-							esc_attr( $taxonomy_name ),
-							__( 'Tagged', 'hrswp-documents' )
-						);
-
-						$post_meta_markup .= get_the_term_list( $post->ID, $taxonomy_name, $prefix, ', ', '</p>' );
-					} else {
-						if (
-							'post_tag' !== $taxonomy_name &&
-							'category' !== $taxonomy_name &&
-							isset( $display_tax ) &&
-							$display_tax
-						) {
-							$taxonomy_object = get_taxonomy( $taxonomy_name );
-							$prefix          = sprintf(
-								'<p class="wp-block-hrswp-documents-list--%1$s-list"><span>%2$s: </span>',
-								esc_attr( $taxonomy_name ),
-								esc_html( $taxonomy_object->labels->singular_name )
-							);
-
-							$post_meta_markup .= get_the_term_list( $post->ID, $taxonomy_name, $prefix, ', ', '</p>' );
-						}
-					}
-				}
-			}
 			if ( isset( $display_date ) && $display_date ) {
-				$post_meta_markup .= sprintf(
-					'<p class="wp-block-hrswp-documents-list--post-date"><time datetime="%1$s">%2$s</time></p>',
+				$list_items_markup .= sprintf(
+					'<time class="wp-block-hrswp-documents-list--post-date" datetime="%1$s">%2$s</time>',
 					esc_attr( get_the_date( 'c', $post ) ),
 					esc_html( get_the_date( '', $post ) )
-				);
-			}
-
-			if ( '' !== $post_meta_markup ) {
-				$list_items_markup .= sprintf(
-					'<div class="wp-block-hrswp-documents-list--meta">%1$s</div>',
-					$post_meta_markup
 				);
 			}
 
@@ -379,18 +309,6 @@ class DocumentsList {
 						'default' => $excerpt_length,
 					),
 					'displayDocumentDate'     => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'displayDocumentCategory' => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'displayDocumentTag'      => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'displayDocumentTaxonomy' => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
