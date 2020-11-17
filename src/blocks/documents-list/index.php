@@ -61,8 +61,8 @@ class DocumentsList {
 			? $attributes['className']
 			: '';
 
-		$attributes['selectedTermLists'] = isset( $attributes['selectedTermLists'] )
-			? $attributes['selectedTermLists']
+		$attributes['featuredImageAlign'] = isset( $attributes['featuredImageAlign'] )
+			? $attributes['featuredImageAlign']
 			: '';
 
 		$attributes['featuredImageSizeHeight'] = isset( $attributes['featuredImageSizeHeight'] )
@@ -73,28 +73,28 @@ class DocumentsList {
 			? $attributes['featuredImageSizeWidth']
 			: 0;
 
-		$attributes['featuredImageAlign'] = isset( $attributes['featuredImageAlign'] )
-			? $attributes['featuredImageAlign']
+		$attributes['selectedTermLists'] = isset( $attributes['selectedTermLists'] )
+			? $attributes['selectedTermLists']
 			: '';
 
 		// Destructure attributes for readability.
 		list(
 			'align'                   => $align,
 			'className'               => $classnames,
-			'selectedTermLists'       => $selected_term_lists,
+			'columns'                 => $columns,
+			'displayDocumentDate'     => $display_date,
+			'displayDocumentExcerpt'  => $display_excerpt,
+			'displayFeaturedImage'    => $display_image,
+			'documentLayout'          => $layout,
 			'documentsToShow'         => $documents_to_show,
 			'excerptLength'           => $excerpt_length,
-			'displayDocumentDate'     => $display_date,
-			'displayFeaturedImage'    => $display_image,
-			'displayDocumentExcerpt'  => $display_excerpt,
-			'documentLayout'          => $layout,
-			'columns'                 => $columns,
-			'featuredImageSizeHeight' => $image_height,
-			'featuredImageSizeWidth'  => $image_width,
 			'featuredImageAlign'      => $image_align,
+			'featuredImageSizeHeight' => $image_height,
+			'featuredImageSizeSlug'   => $image_size_slug,
+			'featuredImageSizeWidth'  => $image_width,
 			'order'                   => $order,
 			'orderBy'                 => $order_by,
-			'featuredImageSizeSlug'   => $image_size_slug,
+			'selectedTermLists'       => $selected_term_lists,
 		) = $attributes;
 
 		// Override the site default if it has been set at the block level.
@@ -299,22 +299,19 @@ class DocumentsList {
 					'className'               => array(
 						'type' => 'string',
 					),
-					'selectedTermLists'       => array(
-						'type' => 'object',
-					),
-					'documentsToShow'         => array(
+					'columns'                 => array(
 						'type'    => 'number',
-						'default' => $post_to_show,
+						'default' => 3,
+					),
+					'displayDocumentDate'     => array(
+						'type'    => 'boolean',
+						'default' => false,
 					),
 					'displayDocumentExcerpt'  => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'excerptLength'           => array(
-						'type'    => 'number',
-						'default' => $excerpt_length,
-					),
-					'displayDocumentDate'     => array(
+					'displayFeaturedImage'    => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
@@ -322,25 +319,21 @@ class DocumentsList {
 						'type'    => 'string',
 						'default' => 'list',
 					),
-					'columns'                 => array(
+					'documentsToShow'         => array(
 						'type'    => 'number',
-						'default' => 3,
+						'default' => $post_to_show,
 					),
-					'order'                   => array(
-						'type'    => 'string',
-						'default' => 'desc',
-					),
-					'orderBy'                 => array(
-						'type'    => 'string',
-						'default' => 'date',
-					),
-					'displayFeaturedImage'    => array(
-						'type'    => 'boolean',
-						'default' => false,
+					'excerptLength'           => array(
+						'type'    => 'number',
+						'default' => $excerpt_length,
 					),
 					'featuredImageAlign'      => array(
 						'type' => 'string',
 						'enum' => array( 'left', 'center', 'right' ),
+					),
+					'featuredImageSizeHeight' => array(
+						'type'    => 'number',
+						'default' => null,
 					),
 					'featuredImageSizeSlug'   => array(
 						'type'    => 'string',
@@ -350,9 +343,16 @@ class DocumentsList {
 						'type'    => 'number',
 						'default' => null,
 					),
-					'featuredImageSizeHeight' => array(
-						'type'    => 'number',
-						'default' => null,
+					'order'                   => array(
+						'type'    => 'string',
+						'default' => 'desc',
+					),
+					'orderBy'                 => array(
+						'type'    => 'string',
+						'default' => 'date',
+					),
+					'selectedTermLists'       => array(
+						'type' => 'object',
 					),
 				),
 				'render_callback' => array( $this, 'render' ),
