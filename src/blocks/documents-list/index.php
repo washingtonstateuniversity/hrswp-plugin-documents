@@ -153,9 +153,13 @@ class DocumentsList {
 				esc_url( get_permalink( $post ) )
 			);
 
-			if ( $display_image ) {
-				$document_id = get_post_meta( $post->ID, '_hrswp_document_file_id', true );
+			if ( false !== $display_image ) {
+				// Get the thumbnail image ID.
+				$image_id = ( has_post_thumbnail( $post ) )
+					? get_post_thumbnail_id( $post ) :
+					get_post_meta( $post->ID, '_hrswp_document_file_id', true );
 
+				// Build the image `style` attribute if custom size is selected.
 				$image_style = '';
 				if ( 0 !== $image_width ) {
 					$image_style .= sprintf( 'max-width:%spx;', $image_width );
@@ -164,23 +168,8 @@ class DocumentsList {
 					$image_style .= sprintf( 'max-height:%spx;', $image_height );
 				}
 
-				// If there is a feature image selected it overrides the thumbnail.
-				if ( has_post_thumbnail( $post ) ) {
-					$image_html = get_the_post_thumbnail(
-						$post,
-						$image_size_slug,
-						array( 'style' => $image_style )
-					);
-				} else {
-					$image_html = wp_get_attachment_image(
-						$document_id,
-						$image_size_slug,
-						false,
-						array( 'style' => $image_style )
-					);
-				}
-
-				if ( ! $image_html ) {
+				// Use fallback image if no thumbnail exists.
+				if ( ! $image_id ) {
 					$registered_sizes = wp_get_registered_image_subsizes();
 
 					$image_html = sprintf(
@@ -191,8 +180,16 @@ class DocumentsList {
 						$image_size_slug,
 						$image_style
 					);
+				} else {
+					$image_html = wp_get_attachment_image(
+						$image_id,
+						$image_size_slug,
+						false,
+						array( 'style' => $image_style )
+					);
 				}
 
+				// Build the image `class` attribute values.
 				$image_classes = 'wp-block-hrswp-documents-list--featured-image';
 				if ( isset( $image_size_slug ) ) {
 					$image_classes .= ' size-' . $image_size_slug;
