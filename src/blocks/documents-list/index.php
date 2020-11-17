@@ -140,26 +140,30 @@ class DocumentsList {
 		// Run the query.
 		$posts = get_posts( $args );
 
+		if ( ! $posts ) {
+			return __( 'No documents found.', 'hrswp-documents' );
+		}
+
 		// Build the markup.
 		$list_items_markup = '';
 
 		foreach ( $posts as $post ) {
-			$document_id = get_post_meta( $post->ID, '_hrswp_document_file_id', true );
-
-			$image_style = '';
-			if ( 0 !== $image_width ) {
-				$image_style .= sprintf( 'max-width:%spx;', $image_width );
-			}
-			if ( 0 !== $image_height ) {
-				$image_style .= sprintf( 'max-height:%spx;', $image_height );
-			}
-
 			$list_items_markup .= sprintf(
 				'<li class="wp-block-hrswp-documents-list--list-item"><a href="%s">',
 				esc_url( get_permalink( $post ) )
 			);
 
 			if ( $display_image ) {
+				$document_id = get_post_meta( $post->ID, '_hrswp_document_file_id', true );
+
+				$image_style = '';
+				if ( 0 !== $image_width ) {
+					$image_style .= sprintf( 'max-width:%spx;', $image_width );
+				}
+				if ( 0 !== $image_height ) {
+					$image_style .= sprintf( 'max-height:%spx;', $image_height );
+				}
+
 				// If there is a feature image selected it overrides the thumbnail.
 				if ( has_post_thumbnail( $post ) ) {
 					$image_html = get_the_post_thumbnail(
