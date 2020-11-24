@@ -52,26 +52,73 @@ class DocumentsList {
 	 * @return string Returns a list of posts.
 	 */
 	public function render( $attributes ) {
+		// Define possibly undefined attributes.
+		$attributes['align'] = isset( $attributes['align'] )
+			? $attributes['align']
+			: '';
+
+		$attributes['className'] = isset( $attributes['className'] )
+			? $attributes['className']
+			: '';
+
+		$attributes['featuredImageAlign'] = isset( $attributes['featuredImageAlign'] )
+			? $attributes['featuredImageAlign']
+			: '';
+
+		$attributes['featuredImageSizeHeight'] = isset( $attributes['featuredImageSizeHeight'] )
+			? $attributes['featuredImageSizeHeight']
+			: 0;
+
+		$attributes['featuredImageSizeWidth'] = isset( $attributes['featuredImageSizeWidth'] )
+			? $attributes['featuredImageSizeWidth']
+			: 0;
+
+		$attributes['selectedTermLists'] = isset( $attributes['selectedTermLists'] )
+			? $attributes['selectedTermLists']
+			: '';
+
+		// Destructure attributes for readability.
+		list(
+			'align'                   => $align,
+			'className'               => $classnames,
+			'columns'                 => $columns,
+			'displayDocumentDate'     => $display_date,
+			'displayDocumentExcerpt'  => $display_excerpt,
+			'displayFeaturedImage'    => $display_image,
+			'documentLayout'          => $layout,
+			'documentsToShow'         => $documents_to_show,
+			'excerptLength'           => $excerpt_length,
+			'featuredImageAlign'      => $image_align,
+			'featuredImageSizeHeight' => $image_height,
+			'featuredImageSizeSlug'   => $image_size_slug,
+			'featuredImageSizeWidth'  => $image_width,
+			'order'                   => $order,
+			'orderBy'                 => $order_by,
+			'selectedTermLists'       => $selected_term_lists,
+		) = $attributes;
+
+		// Override the site default if it has been set at the block level.
+		$this->excerpt_length = $excerpt_length;
+		add_filter( 'excerpt_length', array( $this, 'get_excerpt_length' ), 25 );
+
+		// Define query vars.
 		$args = array(
 			'post_type'        => admin\get_plugin_info( 'post_type' ),
-			'posts_per_page'   => $attributes['documentsToShow'],
+			'posts_per_page'   => $documents_to_show,
 			'post_status'      => 'publish',
-			'order'            => $attributes['order'],
-			'orderby'          => $attributes['orderBy'],
+			'order'            => $order,
+			'orderby'          => $order_by,
 			'suppress_filters' => false,
 		);
 
-		$this->excerpt_length = $attributes['excerptLength'];
-		add_filter( 'excerpt_length', array( $this, 'get_excerpt_length' ), 25 );
-
-		// Taxonomy handling.
+		// Add taxonomies to query vars if selected.
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-		if ( isset( $attributes['selectedTermLists'] ) && ! empty( $attributes['selectedTermLists'] ) ) {
-			// Begin the query.
+		if ( '' !== $selected_term_lists ) {
+			// Begin the taxonomy query.
 			$args['tax_query'] = array( 'relation' => 'AND' );
 
-			// Build each query array.
-			foreach ( $attributes['selectedTermLists'] as $slug => $terms ) {
+			// Build each taxonomy query array.
+			foreach ( $selected_term_lists as $slug => $terms ) {
 				// WP_Query uses some different props than the Rest API \(°-°)/.
 				if ( 'categories' === $slug ) {
 					$slug = 'category';
@@ -79,7 +126,6 @@ class DocumentsList {
 				if ( 'tags' === $slug ) {
 					$slug = 'post_tag';
 				}
-
 				if ( ! empty( $terms ) ) {
 					$args['tax_query'][] = array(
 						'taxonomy' => $slug,
@@ -91,64 +137,68 @@ class DocumentsList {
 		}
 		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
-		$posts            = get_posts( $args );
-		$registered_sizes = wp_get_registered_image_subsizes();
+		// Run the query.
+		$posts = get_posts( $args );
 
+		if ( ! $posts ) {
+			return __( 'No documents found.', 'hrswp-documents' );
+		}
+
+		// Build the markup.
 		$list_items_markup = '';
+		$class             = array( 'wp-block-hrswp-documents-list' );
+
 		foreach ( $posts as $post ) {
-			$document_id = get_post_meta( $post->ID, '_hrswp_document_file_id', true );
+			$list_items_markup .= '<li class="wp-block-hrswp-documents-list--list-item"><a href="' . esc_url( get_permalink( $post ) ) . '">';
 
-			$image_style = '';
-			if ( isset( $attributes['featuredImageSizeWidth'] ) ) {
-				$image_style .= sprintf( 'max-width:%spx;', $attributes['featuredImageSizeWidth'] );
-			}
-			if ( isset( $attributes['featuredImageSizeHeight'] ) ) {
-				$image_style .= sprintf( 'max-height:%spx;', $attributes['featuredImageSizeHeight'] );
-			}
+			if ( false !== $display_image ) {
+				$class[] = 'has-feature-image';
 
-			$list_items_markup .= '<div class="wp-block-hrswp-documents-list--list-item">';
-			if ( $attributes['displayFeaturedImage'] ) {
-				// If there is a feature image selected it overrides the thumbnail.
-				if ( has_post_thumbnail( $post ) ) {
-					$image_html = get_the_post_thumbnail(
-						$post,
-						$attributes['featuredImageSizeSlug'],
-						array( 'style' => $image_style )
+				// Get the thumbnail image ID.
+				$image_id = ( has_post_thumbnail( $post ) )
+					? get_post_thumbnail_id( $post ) :
+					get_post_meta( $post->ID, '_hrswp_document_file_id', true );
+
+				$image_size_slug = ( isset( $image_size_slug ) ) ? $image_size_slug : 'thumbnail';
+
+				// Build the image `style` attribute if custom size is selected.
+				$image_style = '';
+				if ( 0 !== $image_width ) {
+					$image_style .= "max-width:${image_width}px;";
+				}
+				if ( 0 !== $image_height ) {
+					$image_style .= "max-height:${image_height}px;";
+				}
+
+				// Use fallback image if no thumbnail exists.
+				if ( ! $image_id ) {
+					$registered_sizes = wp_get_registered_image_subsizes();
+
+					$image_html = sprintf(
+						'<img width="%1$s" height="%2$s" src="%3$s" class="attachment-%4$s size-%4$s" alt loading="lazy" style="%5$s">',
+						$registered_sizes[ $image_size_slug ]['width'],
+						$registered_sizes[ $image_size_slug ]['height'],
+						plugins_url( 'build/images/document.svg', admin\get_plugin_info( 'plugin_file_uri' ) ),
+						$image_size_slug,
+						$image_style
 					);
 				} else {
 					$image_html = wp_get_attachment_image(
-						$document_id,
-						$attributes['featuredImageSizeSlug'],
+						$image_id,
+						$image_size_slug,
 						false,
 						array( 'style' => $image_style )
 					);
 				}
 
-				if ( ! $image_html ) {
-					$image_html = sprintf(
-						'<img width="%1$s" height="%2$s" src="%3$s" class="attachment-%4$s size-%4$s" alt loading="lazy" style="%5$s">',
-						$registered_sizes[ $attributes['featuredImageSizeSlug'] ]['width'],
-						$registered_sizes[ $attributes['featuredImageSizeSlug'] ]['height'],
-						plugins_url( 'build/images/document.svg', admin\get_plugin_info( 'plugin_file_uri' ) ),
-						$attributes['featuredImageSizeSlug'],
-						$image_style
-					);
+				// Build the image `class` attribute values.
+				$image_class = "wp-block-hrswp-documents-list--featured-image size-${image_size_slug}";
+
+				if ( '' !== $image_align ) {
+					$image_class .= " align${image_align}";
 				}
 
-				$image_classes = 'wp-block-hrswp-documents-list--featured-image';
-				if ( isset( $attributes['featuredImageSizeSlug'] ) ) {
-					$image_classes .= ' size-' . $attributes['featuredImageSizeSlug'];
-				}
-				if ( isset( $attributes['featuredImageAlign'] ) ) {
-					$image_classes .= ' align' . $attributes['featuredImageAlign'];
-				}
-
-				$list_items_markup .= sprintf(
-					'<figure class="%1$s">%2$s</figure>',
-					$image_classes,
-					$image_html
-				);
-
+				$list_items_markup .= "<figure class=\"${image_class}\">${image_html}</figure>";
 			}
 
 			$list_items_markup .= '<div class="wp-block-hrswp-documents-list--body">';
@@ -157,132 +207,45 @@ class DocumentsList {
 			if ( ! $title ) {
 				$title = __( '(no title)', 'hrswp-documents' );
 			}
-			$list_items_markup .= sprintf(
-				'<h3 class="wp-block-hrswp-documents-list--heading"><a href="%1$s">%2$s</a></h3>',
-				esc_url( get_permalink( $post ) ),
-				$title
-			);
+			$list_items_markup .= "<span class=\"wp-block-hrswp-documents-list--heading\">${title}</span>";
 
-			if ( isset( $attributes['displayDocumentExcerpt'] ) && $attributes['displayDocumentExcerpt'] ) {
-				$trimmed_excerpt = get_the_excerpt( $post );
+			if ( false !== $display_excerpt ) {
+				$list_items_markup .= '<span class="wp-block-hrswp-documents-list--post-excerpt">' . get_the_excerpt( $post ) . '</span>';
+			}
 
+			if ( false !== $display_date ) {
+				$class[]            = 'has-date';
 				$list_items_markup .= sprintf(
-					'<p class="wp-block-hrswp-documents-list--post-excerpt">%1$s</p>',
-					$trimmed_excerpt
-				);
-			}
-
-			$post_meta_markup = '';
-			if (
-				isset( $attributes['displayDocumentCategory'] ) ||
-				isset( $attributes['displayDocumentTag'] ) ||
-				isset( $attributes['displayDocumentTaxonomy'] )
-			) {
-				$taxonomy_names = get_object_taxonomies( $post->post_type );
-
-				// Move `post_tags` to the end.
-				$taxonomy_names[] = array_splice(
-					$taxonomy_names,
-					array_search( 'post_tag', $taxonomy_names, true ),
-					1
-				)[0];
-
-				foreach ( $taxonomy_names as $taxonomy_name ) {
-					if (
-						'category' === $taxonomy_name &&
-						isset( $attributes['displayDocumentCategory'] ) &&
-						$attributes['displayDocumentCategory']
-					) {
-						$prefix = sprintf(
-							'<p class="wp-block-hrswp-documents-list--%1$s-list"><span>%2$s: </span>',
-							esc_attr( $taxonomy_name ),
-							__( 'More from', 'hrswp-documents' )
-						);
-
-						$post_meta_markup .= get_the_term_list( $post->ID, $taxonomy_name, $prefix, ', ', '</p>' );
-					} elseif (
-						'post_tag' === $taxonomy_name &&
-						isset( $attributes['displayDocumentTag'] ) &&
-						$attributes['displayDocumentTag']
-					) {
-						$prefix = sprintf(
-							'<p class="wp-block-hrswp-documents-list--%1$s-list"><span>%2$s: </span>',
-							esc_attr( $taxonomy_name ),
-							__( 'Tagged', 'hrswp-documents' )
-						);
-
-						$post_meta_markup .= get_the_term_list( $post->ID, $taxonomy_name, $prefix, ', ', '</p>' );
-					} else {
-						if (
-							'post_tag' !== $taxonomy_name &&
-							'category' !== $taxonomy_name &&
-							isset( $attributes['displayDocumentTaxonomy'] ) &&
-							$attributes['displayDocumentTaxonomy']
-						) {
-							$taxonomy_object = get_taxonomy( $taxonomy_name );
-							$prefix          = sprintf(
-								'<p class="wp-block-hrswp-documents-list--%1$s-list"><span>%2$s: </span>',
-								esc_attr( $taxonomy_name ),
-								esc_html( $taxonomy_object->labels->singular_name )
-							);
-
-							$post_meta_markup .= get_the_term_list( $post->ID, $taxonomy_name, $prefix, ', ', '</p>' );
-						}
-					}
-				}
-			}
-			if ( isset( $attributes['displayDocumentDate'] ) && $attributes['displayDocumentDate'] ) {
-				$post_meta_markup .= sprintf(
-					'<p class="wp-block-hrswp-documents-list--post-date"><time datetime="%1$s">%2$s</time></p>',
+					'<time class="wp-block-hrswp-documents-list--post-date" datetime="%1$s">%2$s</time>',
 					esc_attr( get_the_date( 'c', $post ) ),
 					esc_html( get_the_date( '', $post ) )
 				);
 			}
 
-			if ( '' !== $post_meta_markup ) {
-				$list_items_markup .= sprintf(
-					'<div class="wp-block-hrswp-documents-list--meta">%1$s</div>',
-					$post_meta_markup
-				);
-			}
-
-			$list_items_markup .= "</div></div>\n";
+			$list_items_markup .= "</div></a></li>\n";
 		}
 
 		remove_filter( 'excerpt_length', array( $this, 'get_excerpt_length' ), 20 );
 
-		$class = array( 'wp-block-hrswp-documents-list' );
-
-		if ( isset( $attributes['displayFeaturedImage'] ) && $attributes['displayFeaturedImage'] ) {
-			$class[] = 'has-feature-image';
+		if ( '' !== $align ) {
+			$class[] = "align${align}";
 		}
 
-		if ( isset( $attributes['displayDocumentDate'] ) && $attributes['displayDocumentDate'] ) {
-			$class[] = 'has-date';
-		}
-
-		if ( isset( $attributes['align'] ) ) {
-			$class[] = 'align' . $attributes['align'];
-		}
-
-		if ( isset( $attributes['documentLayout'] ) && 'grid' === $attributes['documentLayout'] ) {
+		if ( 'grid' === $layout ) {
 			$class[] = 'is-grid';
+			$class[] = "columns-${columns}";
 		}
 
-		if ( isset( $attributes['columns'] ) && 'grid' === $attributes['documentLayout'] ) {
-			$class[] = 'columns-' . $attributes['columns'];
-		}
-
-		if ( isset( $attributes['displayDocumentExcerpt'] ) && $attributes['displayDocumentExcerpt'] ) {
+		if ( false !== $display_excerpt ) {
 			$class[] = 'has-excerpt';
 		}
 
-		if ( isset( $attributes['className'] ) ) {
-			$class[] = $attributes['className'];
+		if ( '' !== $classnames ) {
+			$class[] = $classnames;
 		}
 
 		return sprintf(
-			'<div class="%1$s">%2$s</div>',
+			'<ul class="%1$s">%2$s</ul>',
 			esc_attr( implode( ' ', $class ) ),
 			$list_items_markup
 		);
@@ -309,34 +272,19 @@ class DocumentsList {
 					'className'               => array(
 						'type' => 'string',
 					),
-					'selectedTermLists'       => array(
-						'type' => 'object',
-					),
-					'documentsToShow'         => array(
+					'columns'                 => array(
 						'type'    => 'number',
-						'default' => $post_to_show,
-					),
-					'displayDocumentExcerpt'  => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'excerptLength'           => array(
-						'type'    => 'number',
-						'default' => $excerpt_length,
+						'default' => 3,
 					),
 					'displayDocumentDate'     => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'displayDocumentCategory' => array(
+					'displayDocumentExcerpt'  => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'displayDocumentTag'      => array(
-						'type'    => 'boolean',
-						'default' => false,
-					),
-					'displayDocumentTaxonomy' => array(
+					'displayFeaturedImage'    => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
@@ -344,25 +292,21 @@ class DocumentsList {
 						'type'    => 'string',
 						'default' => 'list',
 					),
-					'columns'                 => array(
+					'documentsToShow'         => array(
 						'type'    => 'number',
-						'default' => 3,
+						'default' => $post_to_show,
 					),
-					'order'                   => array(
-						'type'    => 'string',
-						'default' => 'desc',
-					),
-					'orderBy'                 => array(
-						'type'    => 'string',
-						'default' => 'date',
-					),
-					'displayFeaturedImage'    => array(
-						'type'    => 'boolean',
-						'default' => false,
+					'excerptLength'           => array(
+						'type'    => 'number',
+						'default' => $excerpt_length,
 					),
 					'featuredImageAlign'      => array(
 						'type' => 'string',
 						'enum' => array( 'left', 'center', 'right' ),
+					),
+					'featuredImageSizeHeight' => array(
+						'type'    => 'number',
+						'default' => null,
 					),
 					'featuredImageSizeSlug'   => array(
 						'type'    => 'string',
@@ -372,9 +316,16 @@ class DocumentsList {
 						'type'    => 'number',
 						'default' => null,
 					),
-					'featuredImageSizeHeight' => array(
-						'type'    => 'number',
-						'default' => null,
+					'order'                   => array(
+						'type'    => 'string',
+						'default' => 'desc',
+					),
+					'orderBy'                 => array(
+						'type'    => 'string',
+						'default' => 'date',
+					),
+					'selectedTermLists'       => array(
+						'type' => 'object',
 					),
 				),
 				'render_callback' => array( $this, 'render' ),
