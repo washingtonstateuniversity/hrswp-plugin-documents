@@ -388,15 +388,17 @@ class DocumentsListEdit extends Component {
 									rel="noreferrer noopener"
 								>
 									{ displayFeaturedImage && (
-										<figure className={ imageClasses }>
+										<figure
+											className={ imageClasses }
+											style={ {
+												maxWidth: featuredImageSizeWidth,
+												maxHeight: featuredImageSizeHeight,
+											} }
+										>
 											{ imageSourceUrl ? (
 												<img
 													src={ imageSourceUrl }
 													alt=""
-													style={ {
-														maxWidth: featuredImageSizeWidth,
-														maxHeight: featuredImageSizeHeight,
-													} }
 												/>
 											) : (
 												file
