@@ -146,26 +146,28 @@ class DocumentsList {
 
 		// Build the markup.
 		$list_items_markup = '';
+		$class             = array( 'wp-block-hrswp-documents-list' );
 
 		foreach ( $posts as $post ) {
-			$list_items_markup .= sprintf(
-				'<li class="wp-block-hrswp-documents-list--list-item"><a href="%s">',
-				esc_url( get_permalink( $post ) )
-			);
+			$list_items_markup .= '<li class="wp-block-hrswp-documents-list--list-item"><a href="' . esc_url( get_permalink( $post ) ) . '">';
 
 			if ( false !== $display_image ) {
+				$class[] = 'has-feature-image';
+
 				// Get the thumbnail image ID.
 				$image_id = ( has_post_thumbnail( $post ) )
 					? get_post_thumbnail_id( $post ) :
 					get_post_meta( $post->ID, '_hrswp_document_file_id', true );
 
+				$image_size_slug = ( isset( $image_size_slug ) ) ? $image_size_slug : 'thumbnail';
+
 				// Build the image `style` attribute if custom size is selected.
 				$image_style = '';
 				if ( 0 !== $image_width ) {
-					$image_style .= sprintf( 'max-width:%spx;', $image_width );
+					$image_style .= "max-width:${image_width}px;";
 				}
 				if ( 0 !== $image_height ) {
-					$image_style .= sprintf( 'max-height:%spx;', $image_height );
+					$image_style .= "max-height:${image_height}px;";
 				}
 
 				// Use fallback image if no thumbnail exists.
@@ -190,19 +192,13 @@ class DocumentsList {
 				}
 
 				// Build the image `class` attribute values.
-				$image_classes = 'wp-block-hrswp-documents-list--featured-image';
-				if ( isset( $image_size_slug ) ) {
-					$image_classes .= ' size-' . $image_size_slug;
-				}
-				if ( isset( $image_align ) ) {
-					$image_classes .= ' align' . $image_align;
+				$image_class = "wp-block-hrswp-documents-list--featured-image size-${image_size_slug}";
+
+				if ( '' !== $image_align ) {
+					$image_class .= " align${image_align}";
 				}
 
-				$list_items_markup .= sprintf(
-					'<figure class="%1$s">%2$s</figure>',
-					$image_classes,
-					$image_html
-				);
+				$list_items_markup .= "<figure class=\"${image_class}\">${image_html}</figure>";
 			}
 
 			$list_items_markup .= '<div class="wp-block-hrswp-documents-list--body">';
@@ -211,21 +207,14 @@ class DocumentsList {
 			if ( ! $title ) {
 				$title = __( '(no title)', 'hrswp-documents' );
 			}
-			$list_items_markup .= sprintf(
-				'<span class="wp-block-hrswp-documents-list--heading">%s</span>',
-				$title
-			);
+			$list_items_markup .= "<span class=\"wp-block-hrswp-documents-list--heading\">${title}</span>";
 
-			if ( isset( $display_excerpt ) && $display_excerpt ) {
-				$trimmed_excerpt = get_the_excerpt( $post );
-
-				$list_items_markup .= sprintf(
-					'<span class="wp-block-hrswp-documents-list--post-excerpt">%1$s</span>',
-					$trimmed_excerpt
-				);
+			if ( false !== $display_excerpt ) {
+				$list_items_markup .= '<span class="wp-block-hrswp-documents-list--post-excerpt">' . get_the_excerpt( $post ) . '</span>';
 			}
 
-			if ( isset( $display_date ) && $display_date ) {
+			if ( false !== $display_date ) {
+				$class[]            = 'has-date';
 				$list_items_markup .= sprintf(
 					'<time class="wp-block-hrswp-documents-list--post-date" datetime="%1$s">%2$s</time>',
 					esc_attr( get_the_date( 'c', $post ) ),
@@ -238,33 +227,20 @@ class DocumentsList {
 
 		remove_filter( 'excerpt_length', array( $this, 'get_excerpt_length' ), 20 );
 
-		$class = array( 'wp-block-hrswp-documents-list' );
-
-		if ( isset( $display_image ) && $display_image ) {
-			$class[] = 'has-feature-image';
+		if ( '' !== $align ) {
+			$class[] = "align${align}";
 		}
 
-		if ( isset( $display_date ) && $display_date ) {
-			$class[] = 'has-date';
-		}
-
-		if ( isset( $align ) ) {
-			$class[] = 'align' . $align;
-		}
-
-		if ( isset( $layout ) && 'grid' === $layout ) {
+		if ( 'grid' === $layout ) {
 			$class[] = 'is-grid';
+			$class[] = "columns-${columns}";
 		}
 
-		if ( isset( $columns ) && 'grid' === $layout ) {
-			$class[] = 'columns-' . $columns;
-		}
-
-		if ( isset( $display_excerpt ) && $display_excerpt ) {
+		if ( false !== $display_excerpt ) {
 			$class[] = 'has-excerpt';
 		}
 
-		if ( isset( $classnames ) ) {
+		if ( '' !== $classnames ) {
 			$class[] = $classnames;
 		}
 
