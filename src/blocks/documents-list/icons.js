@@ -28,14 +28,10 @@ export const list = (
 );
 
 export const file = (
-	<SVG xmlns="http://www.w3.org/2000/SVG" viewBox="2 2 20 20">
-		<Path fill="none" d="M0 0h24v24H0V0z" />
-		<G>
-			<Path fill="#8d959a" d="M8 16h8v2H8zM8 12h8v2H8z" />
-			<Path
-				fill="#8d959a"
-				d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"
-			/>
+	<SVG xmlns="http://www.w3.org/2000/svg" viewBox="583 268 24 24">
+		<G fill="#8D959A">
+			<Path d="M589 285.015h12v1.971h-12v-1.971zm0-4.983h12v1.972h-12v-1.972z" />
+			<Path d="M598 268h-12c-1.65 0-3 1.08-3 2.4v19.2c0 1.32 1.335 2.4 2.985 2.4H604c1.65 0 3-1.08 3-2.4v-14.4l-9-7.2zm7.35 22.309h-20.571V269.8h12v6.409h8.571v14.1z" />
 		</G>
 	</SVG>
 );
