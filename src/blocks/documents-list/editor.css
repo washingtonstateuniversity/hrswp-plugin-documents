@@ -9,5 +9,9 @@
 
 .wp-block[data-type="hrswp/documents-list"] {
 	font-size: 1rem;
+
+	& .aligncenter {
+		text-align: center;
+	}
 }
 /* stylelint-enable selector-class-pattern */
