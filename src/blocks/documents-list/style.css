@@ -38,14 +38,12 @@
 }
 
 .wp-block-hrswp-documents-list.has-date .wp-block-hrswp-documents-list--list-item:not(:last-of-type),
-.wp-block-hrswp-documents-list.has-excerpt .wp-block-hrswp-documents-list--list-item:not(:last-of-type),
-.wp-block-hrswp-documents-list.has-feature-image .wp-block-hrswp-documents-list--list-item:not(:last-of-type) {
+.wp-block-hrswp-documents-list.has-excerpt .wp-block-hrswp-documents-list--list-item:not(:last-of-type) {
 	padding-bottom: 0.5em;
 }
 
 .wp-block-hrswp-documents-list.has-date .wp-block-hrswp-documents-list--list-item:not(:first-of-type),
-.wp-block-hrswp-documents-list.has-excerpt .wp-block-hrswp-documents-list--list-item:not(:first-of-type),
-.wp-block-hrswp-documents-list.has-feature-image .wp-block-hrswp-documents-list--list-item:not(:first-of-type) {
+.wp-block-hrswp-documents-list.has-excerpt .wp-block-hrswp-documents-list--list-item:not(:first-of-type) {
 	padding-top: 0.5em;
 	border-top: 1px solid #eaeaea;
 }
