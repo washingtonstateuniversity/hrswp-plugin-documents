@@ -146,13 +146,10 @@ class DocumentsList {
 
 		// Build the markup.
 		$list_items_markup = '';
-		$class             = array( 'wp-block-hrswp-documents-list' );
-
 		foreach ( $posts as $post ) {
 			$list_items_markup .= '<li class="wp-block-hrswp-documents-list--list-item"><a href="' . esc_url( get_permalink( $post ) ) . '">';
 
 			if ( false !== $display_image ) {
-				$class[] = 'has-feature-image';
 
 				// Get the thumbnail image ID.
 				$image_id = ( has_post_thumbnail( $post ) )
@@ -214,7 +211,6 @@ class DocumentsList {
 			}
 
 			if ( false !== $display_date ) {
-				$class[]            = 'has-date';
 				$list_items_markup .= sprintf(
 					'<time class="wp-block-hrswp-documents-list--post-date" datetime="%1$s">%2$s</time>',
 					esc_attr( get_the_date( 'c', $post ) ),
@@ -226,6 +222,16 @@ class DocumentsList {
 		}
 
 		remove_filter( 'excerpt_length', array( $this, 'get_excerpt_length' ), 20 );
+
+		$class = array( 'wp-block-hrswp-documents-list' );
+
+		if ( false !== $display_image ) {
+			$class[] = 'has-feature-image';
+		}
+
+		if ( false !== $display_date ) {
+			$class[] = 'has-date';
+		}
 
 		if ( '' !== $align ) {
 			$class[] = "align${align}";
