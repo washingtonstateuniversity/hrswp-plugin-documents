@@ -98,6 +98,7 @@ class DocumentsListEdit extends Component {
 			displayFeaturedImage,
 			displayDocumentExcerpt,
 			displayDocumentDate,
+			displayDocumentTitle,
 			documentLayout,
 			columns,
 			order,
@@ -118,6 +119,13 @@ class DocumentsListEdit extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Display settings' ) }>
+					<ToggleControl
+						label={ __( 'Display title' ) }
+						checked={ displayDocumentTitle }
+						onChange={ ( value ) =>
+							setAttributes( { displayDocumentTitle: value } )
+						}
+					/>
 					<ToggleControl
 						label={ __( 'Display excerpt' ) }
 						checked={ displayDocumentExcerpt }
@@ -330,6 +338,11 @@ class DocumentsListEdit extends Component {
 				</BlockControls>
 				<ul
 					className={ classnames( className, {
+						'image-only':
+							displayFeaturedImage &&
+							! displayDocumentDate &&
+							! displayDocumentExcerpt &&
+							! displayDocumentTitle,
 						'is-grid': documentLayout === 'grid',
 						'has-feature-image': displayFeaturedImage,
 						'has-date': displayDocumentDate,
@@ -406,15 +419,17 @@ class DocumentsListEdit extends Component {
 										</figure>
 									) }
 									<div className="wp-block-hrswp-documents-list--body">
-										<span className="wp-block-hrswp-documents-list--heading">
-											{ titleTrimmed ? (
-												<RawHTML>
-													{ titleTrimmed }
-												</RawHTML>
-											) : (
-												__( '(no title)' )
-											) }
-										</span>
+										{ displayDocumentTitle && (
+											<span className="wp-block-hrswp-documents-list--heading">
+												{ titleTrimmed ? (
+													<RawHTML>
+														{ titleTrimmed }
+													</RawHTML>
+												) : (
+													__( '(no title)' )
+												) }
+											</span>
+										) }
 										{ displayDocumentExcerpt && (
 											<span className="wp-block-hrswp-documents-list--post-excerpt">
 												{ postExcerpt }

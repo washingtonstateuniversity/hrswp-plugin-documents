@@ -84,6 +84,7 @@ class DocumentsList {
 			'columns'                 => $columns,
 			'displayDocumentDate'     => $display_date,
 			'displayDocumentExcerpt'  => $display_excerpt,
+			'displayDocumentTitle'    => $display_title,
 			'displayFeaturedImage'    => $display_image,
 			'documentLayout'          => $layout,
 			'documentsToShow'         => $documents_to_show,
@@ -200,11 +201,13 @@ class DocumentsList {
 
 			$list_items_markup .= '<div class="wp-block-hrswp-documents-list--body">';
 
-			$title = get_the_title( $post );
-			if ( ! $title ) {
-				$title = __( '(no title)', 'hrswp-documents' );
+			if ( false !== $display_title ) {
+				$title = get_the_title( $post );
+				if ( ! $title ) {
+					$title = __( '(no title)', 'hrswp-documents' );
+				}
+				$list_items_markup .= "<span class=\"wp-block-hrswp-documents-list--heading\">${title}</span>";
 			}
-			$list_items_markup .= "<span class=\"wp-block-hrswp-documents-list--heading\">${title}</span>";
 
 			if ( false !== $display_excerpt ) {
 				$list_items_markup .= '<span class="wp-block-hrswp-documents-list--post-excerpt">' . get_the_excerpt( $post ) . '</span>';
@@ -227,6 +230,10 @@ class DocumentsList {
 
 		if ( false !== $display_image ) {
 			$class[] = 'has-feature-image';
+
+			if ( true !== $display_title && true !== $display_date && true !== $display_excerpt ) {
+				$class[] = 'image-only';
+			}
 		}
 
 		if ( false !== $display_date ) {
@@ -289,6 +296,10 @@ class DocumentsList {
 					'displayDocumentExcerpt'  => array(
 						'type'    => 'boolean',
 						'default' => false,
+					),
+					'displayDocumentTitle'    => array(
+						'type'    => 'boolean',
+						'default' => true,
 					),
 					'displayFeaturedImage'    => array(
 						'type'    => 'boolean',
