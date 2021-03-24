@@ -10,6 +10,10 @@
 .wp-block[data-type="hrswp/documents-list"] {
 	font-size: 1rem;
 
+	& a .wp-block-hrswp-documents-list--heading > div {
+		text-decoration: underline;
+	}
+
 	& .aligncenter {
 		text-align: center;
 	}
