@@ -101,6 +101,7 @@ class DocumentsListEdit extends Component {
 			displayDocumentTitle,
 			documentLayout,
 			columns,
+			justifyGridColumns,
 			order,
 			orderBy,
 			selectedTermLists,
@@ -119,6 +120,17 @@ class DocumentsListEdit extends Component {
 		const inspectorControls = (
 			<InspectorControls>
 				<PanelBody title={ __( 'Display settings' ) }>
+					{ documentLayout === 'grid' && (
+						<ToggleControl
+							label={ __( 'Justify grid columns' ) }
+							checked={ justifyGridColumns }
+							onChange={ ( value ) =>
+								setAttributes( {
+									justifyGridColumns: value,
+								} )
+							}
+						/>
+					) }
 					<ToggleControl
 						label={ __( 'Display title' ) }
 						checked={ displayDocumentTitle }
@@ -347,6 +359,7 @@ class DocumentsListEdit extends Component {
 						'has-feature-image': displayFeaturedImage,
 						'has-date': displayDocumentDate,
 						'has-excerpt': displayDocumentExcerpt,
+						'justify-columns': justifyGridColumns,
 						[ `columns-${ columns }` ]: documentLayout === 'grid',
 					} ) }
 				>

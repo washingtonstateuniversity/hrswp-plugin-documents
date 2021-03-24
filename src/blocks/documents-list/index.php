@@ -93,6 +93,7 @@ class DocumentsList {
 			'featuredImageSizeHeight' => $image_height,
 			'featuredImageSizeSlug'   => $image_size_slug,
 			'featuredImageSizeWidth'  => $image_width,
+			'justifyGridColumns'      => $justify_columns,
 			'order'                   => $order,
 			'orderBy'                 => $order_by,
 			'selectedTermLists'       => $selected_term_lists,
@@ -253,6 +254,10 @@ class DocumentsList {
 			$class[] = 'has-excerpt';
 		}
 
+		if ( false !== $justify_columns ) {
+			$class[] = 'justify-columns';
+		}
+
 		if ( '' !== $classnames ) {
 			$class[] = $classnames;
 		}
@@ -332,6 +337,10 @@ class DocumentsList {
 					'featuredImageSizeWidth'  => array(
 						'type'    => 'number',
 						'default' => null,
+					),
+					'justifyGridColumns'      => array(
+						'type'    => 'boolean',
+						'default' => true,
 					),
 					'order'                   => array(
 						'type'    => 'string',
