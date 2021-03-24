@@ -84,6 +84,7 @@ class DocumentsList {
 			'columns'                 => $columns,
 			'displayDocumentDate'     => $display_date,
 			'displayDocumentExcerpt'  => $display_excerpt,
+			'displayDocumentTitle'    => $display_title,
 			'displayFeaturedImage'    => $display_image,
 			'documentLayout'          => $layout,
 			'documentsToShow'         => $documents_to_show,
@@ -92,6 +93,7 @@ class DocumentsList {
 			'featuredImageSizeHeight' => $image_height,
 			'featuredImageSizeSlug'   => $image_size_slug,
 			'featuredImageSizeWidth'  => $image_width,
+			'justifyGridColumns'      => $justify_columns,
 			'order'                   => $order,
 			'orderBy'                 => $order_by,
 			'selectedTermLists'       => $selected_term_lists,
@@ -200,11 +202,13 @@ class DocumentsList {
 
 			$list_items_markup .= '<div class="wp-block-hrswp-documents-list--body">';
 
-			$title = get_the_title( $post );
-			if ( ! $title ) {
-				$title = __( '(no title)', 'hrswp-documents' );
+			if ( false !== $display_title ) {
+				$title = get_the_title( $post );
+				if ( ! $title ) {
+					$title = __( '(no title)', 'hrswp-documents' );
+				}
+				$list_items_markup .= "<span class=\"wp-block-hrswp-documents-list--heading\">${title}</span>";
 			}
-			$list_items_markup .= "<span class=\"wp-block-hrswp-documents-list--heading\">${title}</span>";
 
 			if ( false !== $display_excerpt ) {
 				$list_items_markup .= '<span class="wp-block-hrswp-documents-list--post-excerpt">' . get_the_excerpt( $post ) . '</span>';
@@ -227,6 +231,10 @@ class DocumentsList {
 
 		if ( false !== $display_image ) {
 			$class[] = 'has-feature-image';
+
+			if ( true !== $display_title && true !== $display_date && true !== $display_excerpt ) {
+				$class[] = 'image-only';
+			}
 		}
 
 		if ( false !== $display_date ) {
@@ -244,6 +252,10 @@ class DocumentsList {
 
 		if ( false !== $display_excerpt ) {
 			$class[] = 'has-excerpt';
+		}
+
+		if ( false !== $justify_columns ) {
+			$class[] = 'justify-columns';
 		}
 
 		if ( '' !== $classnames ) {
@@ -290,6 +302,10 @@ class DocumentsList {
 						'type'    => 'boolean',
 						'default' => false,
 					),
+					'displayDocumentTitle'    => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
 					'displayFeaturedImage'    => array(
 						'type'    => 'boolean',
 						'default' => false,
@@ -321,6 +337,10 @@ class DocumentsList {
 					'featuredImageSizeWidth'  => array(
 						'type'    => 'number',
 						'default' => null,
+					),
+					'justifyGridColumns'      => array(
+						'type'    => 'boolean',
+						'default' => true,
 					),
 					'order'                   => array(
 						'type'    => 'string',
