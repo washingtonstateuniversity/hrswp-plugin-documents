@@ -35,7 +35,7 @@
 		"@wordpress/npm-package-json-lint-config": "3.1.0",
 		"babel-loader": "^8.3.0",
 		"classnames": "^2.2.6",
-		"cssnano": "^4.1.10",
+		"cssnano": "^5.1.14",
 		"eslint": "^7.3.1",
 		"eslint-plugin-jest": "^23.18.0",
 		"lodash": "^4.17.21",
