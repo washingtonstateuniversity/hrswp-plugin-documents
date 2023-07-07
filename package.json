@@ -48,7 +48,7 @@
 		"resolve-bin": "^0.4.0",
 		"rimraf": "^3.0.2",
 		"source-map-loader": "^1.0.0",
-		"stylelint": "^15.6.0",
+		"stylelint": "^15.10.1",
 		"stylelint-config-wordpress": "^17.0.0",
 		"thread-loader": "^3.0.4",
 		"webpack": "^5.76.0",
